@@ -1,0 +1,9 @@
+.inner-1 {
+    background-color: lightskyblue;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 20vh;
+    justify-content: space-between;
+    /* justify-content: center; */
+}
