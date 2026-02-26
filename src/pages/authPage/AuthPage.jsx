@@ -46,9 +46,13 @@ function AuthPage() {
         <div className="flex flex-col justify-center p-10 md:p-16">
 
           {role === null ? (
-            <div className="flex flex-col items-center justify-center text-center space-y-6">
+            <div className="flex flex-col items-center sm:w-auto justify-center text-center space-y-6">
 
-              <h1 className="text-3xl font-semibold">Your Logo</h1>
+              <img
+                src="/img/Icon-2.jpeg"
+                alt="Service Illustration"
+                className=" w-auto object-contain mx-auto"
+              />
 
               <button
                 onClick={() => setRole("resident")}

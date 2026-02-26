@@ -21,7 +21,7 @@ function HomePage() {
 
           <NavLink to={"/auth"}>
             <button className="flex-1 sm:flex-none bg-[#FF6B6B] hover:bg-[#ff5252] text-white font-semibold px-8 py-3 rounded-full transition-all duration-300">
-              Get Started
+              Get Started Now
             </button>
           </NavLink>
 
@@ -38,7 +38,7 @@ function HomePage() {
       <div className="flex-1 flex justify-center mb-10 lg:mb-0">
         <img
           className="w-full block w-[110%] max-w-sm sm:max-w-md md:max-w-lg lg:max-w-full h-auto object-contain max-h-[60vh] w-auto object-contain mx-auto"
-          src="/img/NObackground.png"
+          src="/img/newnoBackground.png"
           alt="Hero"
         />
       </div>
