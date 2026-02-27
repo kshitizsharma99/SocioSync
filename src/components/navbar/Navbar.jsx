@@ -7,14 +7,13 @@ function Navbar() {
   return (
     <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-20 py-4 flex items-center justify-between">
 
-      {/* LEFT SECTION */}
       <div className="flex items-center gap-6">
 
         <Image
           preview={false}
           src={bannerImg}
-          height={40}
-          width={50}
+          height={45}
+          width={45}
         />
 
         <NavLink to="/">
