@@ -1,0 +1,13 @@
+# Backend
+backend/node_modules/
+
+# Root node modules (just in case)
+node_modules/
+
+# Environment
+.env
+backend/.env
+
+# OS
+.DS_Store
+Thumbs.db
