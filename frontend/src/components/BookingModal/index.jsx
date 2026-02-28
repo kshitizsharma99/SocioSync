@@ -2,7 +2,7 @@ import { Modal, Form, Input, DatePicker, TimePicker, Radio, Upload, Button, mess
 import { UploadOutlined } from "@ant-design/icons";
 import { UserOutlined, PhoneOutlined, CameraOutlined, EnvironmentOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import { useRef, uploadRef } from "react";
+import { uploadRef } from "react";
 
 function BookingModal({ open, service, onClose }) {
     const [form] = Form.useForm();
@@ -11,19 +11,43 @@ function BookingModal({ open, service, onClose }) {
     const handleSubmit = async () => {
         try {
             const values = await form.validateFields();
-
             setLoading(true);
 
-            setTimeout(() => {
-                console.log("Form Data:", values);
-                message.success("Service booked successfully!");
-                setLoading(false);
+            const user = JSON.parse(localStorage.getItem("user"));
+
+            const response = await fetch("http://localhost:5000/api/complaints", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    user: user.id,
+                    serviceTitle: service?.title,
+                    name: values.name,
+                    phone: values.phone,
+                    address: values.address,
+                    description: values.description,
+                    preferredDate: values.date,
+                    preferredTime: values.time,
+                    urgency: values.urgency
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                message.success("Complaint submitted successfully!");
                 form.resetFields();
                 onClose();
-            }, 1500);
+            } else {
+                message.error(data.message);
+            }
+
+            setLoading(false);
 
         } catch (error) {
             console.log("Validation failed");
+            setLoading(false);
         }
     };
 

@@ -23,24 +23,19 @@ function AuthPage() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!isLogin) {
 
-      // Resident Validation
       if (role === "resident") {
-        if (
-          !formData.fullName ||
-          !formData.flatNo ||
-          !formData.buildingName
-        ) {
+        if (!formData.fullName || !formData.flatNo || !formData.buildingName) {
           alert("Please fill all resident details");
           return;
         }
       }
 
-      // Admin Validation
+      // Admin validation
       if (role === "admin") {
         if (!formData.fullName || !formData.adminCode) {
           alert("Please fill admin details");
@@ -48,15 +43,75 @@ function AuthPage() {
         }
       }
 
-      // Password Check
       if (formData.password !== formData.confirmPassword) {
         alert("Passwords do not match");
         return;
       }
-    }
 
-    if (isLogin) navigate("/services");
-    else navigate("/");
+      try {
+        const response = await fetch("http://localhost:5000/api/auth/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            fullName: formData.fullName,
+            email: formData.email,
+            password: formData.password,
+            role: role,
+            houseNo: formData.flatNo,
+            buildingName: formData.buildingName,
+            adminCode: formData.adminCode
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert("Signup successful. Please login.");
+          setIsLogin(true);
+        } else {
+          alert(data.message);
+        }
+
+      } catch (error) {
+        alert("Server error");
+      }
+
+    } else {
+
+      // 🔵 LOGIN API CALL
+      try {
+        const response = await fetch("http://localhost:5000/api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          localStorage.setItem("user", JSON.stringify(data.user));
+
+          if (data.user.role === "admin") {
+            navigate("/services");
+          } else {
+            navigate("/services");
+          }
+
+        } else {
+          alert(data.message);
+        }
+
+      } catch (error) {
+        alert("Server error");
+      }
+    }
   };
 
   return (
@@ -87,7 +142,6 @@ function AuthPage() {
           </div>
         </div>
 
-        {/* RIGHT FORM SECTION */}
         <div className="flex flex-col justify-center p-10 md:p-16">
 
           {role === null ? (
@@ -149,7 +203,6 @@ function AuthPage() {
 
               <form onSubmit={handleSubmit} className="space-y-5">
 
-                {/* SIGNUP EXTRA FIELDS */}
                 {!isLogin && (
                   <>
                     <input
@@ -192,7 +245,6 @@ function AuthPage() {
                   </>
                 )}
 
-                {/* EMAIL */}
                 <input
                   type="email"
                   name="email"
@@ -201,7 +253,6 @@ function AuthPage() {
                   className="w-full px-5 py-3 bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
                 />
 
-                {/* PASSWORD */}
                 <input
                   type="password"
                   name="password"
@@ -210,7 +261,6 @@ function AuthPage() {
                   className="w-full px-5 py-3 bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
                 />
 
-                {/* CONFIRM PASSWORD */}
                 {!isLogin && (
                   <input
                     type="password"

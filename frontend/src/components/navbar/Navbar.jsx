@@ -30,7 +30,6 @@ function Navbar() {
 
       </div>
 
-      {/* RIGHT SECTION */}
       <div className="flex items-center gap-4">
 
         <NavLink to="/auth">
