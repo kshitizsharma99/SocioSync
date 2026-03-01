@@ -1,8 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { Button, Image } from "antd";
 
-function Navbar() {
-  const bannerImg = "/img/logo_128.png";
+function Navbar({ onOpenSupport }) {
+  const bannerImg = "/icon/community.gif";
 
   return (
     <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-20 py-4 flex items-center justify-between">
@@ -27,6 +27,14 @@ function Navbar() {
             Services
           </Button>
         </NavLink>
+
+        <Button
+          type="text"
+          onClick={onOpenSupport}
+          className="!text-base !font-medium"
+        >
+          Support
+        </Button>
 
       </div>
 
