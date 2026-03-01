@@ -8,7 +8,10 @@ function SupportWorkspace() {
     const [complaints, setComplaints] = useState([]);
     const [selectedComplaint, setSelectedComplaint] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [role, setRole] = useState(null);
+
+
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    const role = storedUser?.role;
 
     useEffect(() => {
         fetchComplaints();
@@ -42,7 +45,7 @@ function SupportWorkspace() {
     }
 
     return (
-        <div className="h-[75vh] overflow-y-auto">
+        <div className="h-[75vh] overflow-y-auto custom-scrollbar p-2">
             <div className="flex flex-col lg:flex-row gap-6">
 
                 <ComplaintSidebar
@@ -52,11 +55,10 @@ function SupportWorkspace() {
                     role={role}
                 />
 
-                <ComplaintOverview complaint={selectedComplaint} />
-
-                <div className="w-full lg:w-96 bg-white rounded-2xl shadow-sm p-4 border border-gray-100">
-                    Conversation (coming after backend)
-                </div>
+                <ComplaintOverview
+                    complaint={selectedComplaint}
+                    role={role}
+                />
 
             </div>
         </div>

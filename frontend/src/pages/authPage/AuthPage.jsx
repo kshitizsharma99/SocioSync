@@ -35,7 +35,6 @@ function AuthPage() {
         }
       }
 
-      // Admin validation
       if (role === "admin") {
         if (!formData.fullName || !formData.adminCode) {
           alert("Please fill admin details");
@@ -80,7 +79,7 @@ function AuthPage() {
 
     } else {
 
-      // 🔵 LOGIN API CALL
+
       try {
         const response = await fetch("http://localhost:5000/api/auth/login", {
           method: "POST",

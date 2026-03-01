@@ -1,7 +1,7 @@
 import { Card, Tag, Steps, Divider } from "antd";
 import axios from "axios";
 
-function ComplaintOverview({ complaint }) {
+function ComplaintOverview({ complaint, role }) {
     if (!complaint) {
         return <div className="flex-1">Select a complaint</div>;
     }
@@ -20,14 +20,14 @@ function ComplaintOverview({ complaint }) {
                 { status: newStatus }
             );
 
-            window.location.reload(); // temporary refresh
+            window.location.reload();
         } catch (error) {
             console.error("Error updating status", error);
         }
     };
 
     return (
-        <div className="flex-1 bg-white rounded-2xl shadow-sm p-6">
+        <div className="flex-1 bg-rgba(255, 255, 255, 0.64) rounded-2xl border border-gray-100 shadow-sm p-6">
 
             <div className="flex justify-between items-center mb-6">
                 <div>
@@ -62,7 +62,8 @@ function ComplaintOverview({ complaint }) {
 
 
             <Divider />
-            <div className="flex gap-3 mb-6">
+
+            {role === "admin" && (<div className="flex gap-3 mb-6">
                 <button
                     onClick={() => updateStatus("seen")}
                     className="bg-yellow-500 text-white px-4 py-2 rounded"
@@ -83,7 +84,8 @@ function ComplaintOverview({ complaint }) {
                 >
                     Mark as Completed
                 </button>
-            </div>
+            </div>)}
+
 
             <div className="grid grid-cols-2 gap-6 mb-6">
                 <div>

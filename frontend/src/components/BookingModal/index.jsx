@@ -53,19 +53,25 @@ function BookingModal({ open, service, onClose }) {
 
     return (
         <Modal
-            classNames={{
-                content: "rounded-5xl mx-4 sm:mx-0",
-                header: "rounded-t-2xl px-6 pt-6 pb-2 text-lg font-semibold",
-                body: "px-6 pb-6 pt-2"
-            }}
+
             open={open}
             onCancel={onClose}
             footer={null}
             title={`Book Service: ${service?.title || ""}`}
             centered
-            width="100%"
-            style={{ maxWidth: 600 }}
+            width="95%"
+            style={{ maxWidth: 1300 }}
+            mask={{ enabled: true, blur: true }}
             styles={{
+                root: {
+                    padding: "16px"
+                },
+                container: {
+                    borderRadius: "32px",
+                },
+                header: {
+                    padding: "12px",
+                },
                 mask: {
                     backdropFilter: "blur(8px)"
 

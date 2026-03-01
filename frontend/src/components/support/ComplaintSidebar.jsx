@@ -21,8 +21,10 @@ function ComplaintSidebar({
         completed: complaints.filter(c => c.status === "completed").length
     };
 
+    console.log("Current role:", role);
+
     return (
-        <div className="w-full lg:w-80 bg-white rounded-2xl shadow-sm p-4 border border-gray-100 flex flex-col gap-4">
+        <div className="w-full lg:w-80 bg-rgba(255, 255, 255, 0.64) rounded-2xl shadow-sm p-4 border border-gray-100 flex flex-col gap-4">
 
 
             <Select
@@ -40,7 +42,7 @@ function ComplaintSidebar({
                 }))}
             />
 
-            <div className="flex-1 overflow-y-auto space-y-3">
+            <div className="flex-1 overflow-y-auto hide-scrollbar space-y-3">
                 {complaints.map((complaint) => (
                     <div
                         key={complaint._id}
@@ -68,6 +70,8 @@ function ComplaintSidebar({
                     </div>
                 ))}
             </div>
+
+
 
             {role === "admin" && (
                 <div className="grid grid-cols-2 gap-3">

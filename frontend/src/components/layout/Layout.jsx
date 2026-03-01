@@ -25,13 +25,30 @@ function Layout({ children }) {
                 centered
                 width="95%"
                 style={{ maxWidth: 1300 }}
-                maskStyle={{ backdropFilter: "blur(8px)" }}
-                classNames={{
-                    content: "rounded-3xl overflow-hidden",
-                    body: "p-8 bg-transparent",
+                mask={{ enabled: true, blur: true }}
+                styles={{
+                    root: {
+                        padding: "16px"
+                    },
+                    container: {
+                        background: "rgb(255, 255, 255)",
+                        backdropFilter: "blur(0px)",
+                        WebkitBackdropFilter: "blur(20px)",
+                        border: "1px solid rgba(255,255,255,0.2)",
+                        borderRadius: "32px",
+                        boxShadow: "0 8px 32px rgba(0,0,0,0.25)"
+                    },
+                    body: {
+                        background: "transparent",
+                        padding: "16px"
+                    },
+                    header: {
+                        background: "transparent"
+                    }
                 }}
             >
                 <SupportWorkspace />
+
             </Modal>
 
         </div>
