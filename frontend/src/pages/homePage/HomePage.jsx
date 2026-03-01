@@ -37,7 +37,7 @@ function HomePage() {
 
       <div className="flex-1 flex justify-center mb-10 lg:mb-0">
         <img
-          className="w-full block w-[110%] max-w-sm sm:max-w-md md:max-w-lg lg:max-w-full h-auto object-contain max-h-[60vh] w-auto object-contain mx-auto"
+          className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-full h-auto object-contain mx-auto"
           src="/img/newnoBackground.png"
           alt="Hero"
         />

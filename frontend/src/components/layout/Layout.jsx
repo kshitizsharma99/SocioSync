@@ -8,7 +8,7 @@ function Layout({ children }) {
     const [supportOpen, setSupportOpen] = useState(false);
 
     return (
-        <div className="min-h-screen w-full flex flex-col overflow-x-hidden">
+        <div className="h-screen w-full flex flex-col">
 
             <Navbar onOpenSupport={() => setSupportOpen(true)} />
 
@@ -27,9 +27,7 @@ function Layout({ children }) {
                 style={{ maxWidth: 1300 }}
                 mask={{ enabled: true, blur: true }}
                 styles={{
-                    root: {
-                        padding: "16px"
-                    },
+
                     container: {
                         background: "rgb(255, 255, 255)",
                         backdropFilter: "blur(0px)",

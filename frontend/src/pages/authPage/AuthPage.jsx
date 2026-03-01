@@ -114,11 +114,11 @@ function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-transparent px-6">
+    <div className=" flex items-center justify-center bg-transparent px-6">
 
-      <div className="w-full max-w-6xl bg-white rounded-3xl shadow-2xl grid md:grid-cols-2 overflow-hidden">
+      <div className="w-full max-w-6xl bg-white rounded-3xl shadow-xl grid md:grid-cols-2 overflow-hidden">
 
-        {/* LEFT IMAGE SECTION (UNCHANGED) */}
+
         <div className="hidden md:flex items-center justify-center bg-[#F5F7FA] p-10">
 
           <div className="text-center">
@@ -126,7 +126,7 @@ function AuthPage() {
             <img
               src="/img/login-illustration.png"
               alt="Service Illustration"
-              className="max-h-[60vh] w-auto object-contain mx-auto"
+              className="max-h-[50vh] w-auto object-contain mx-auto"
             />
 
             <h1 className="text-4xl font-serif font-semibold mt-8 text-gray-800">
@@ -141,7 +141,7 @@ function AuthPage() {
           </div>
         </div>
 
-        <div className="flex flex-col justify-center p-10 md:p-16">
+        <div className="flex flex-col justify-center p-10">
 
           {role === null ? (
 
@@ -150,7 +150,7 @@ function AuthPage() {
               <img
                 src="/img/Icon-2.jpeg"
                 alt="Icon"
-                className="w-auto object-contain mx-auto"
+                className="w-auto max-h-[50vh] object-contain mx-auto"
               />
 
               <button
