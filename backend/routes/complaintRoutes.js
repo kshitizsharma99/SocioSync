@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Complaint = require("../models/Complaint");
+const Notification = require("../models/Notification");
 
 router.get("/", async (req, res) => {
     try {
@@ -15,20 +16,35 @@ router.put("/:id/status", async (req, res) => {
     try {
         const { status } = req.body;
 
+        // ✅ Validate input
+        const allowedStatus = ["pending", "seen", "scheduled", "completed"];
+        if (!status || !allowedStatus.includes(status)) {
+            return res.status(400).json({ message: "Invalid status value" });
+        }
+
+        // ✅ Update with validation ON
         const updatedComplaint = await Complaint.findByIdAndUpdate(
             req.params.id,
             { status },
-            { new: true }
+            { new: true, runValidators: true } // 🔥 KEY FIX
         );
 
         if (!updatedComplaint) {
             return res.status(404).json({ message: "Complaint not found" });
         }
 
+        // ✅ Ensure correct type
+        await Notification.create({
+            userId: updatedComplaint.user, // keep as ObjectId (BEST)
+            message: `Your complaint is now ${status}`,
+            type: "complaint"
+        });
+
         res.json(updatedComplaint);
 
     } catch (error) {
-        res.status(500).json({ message: "Server error" });
+        console.error(error); // 🔥 MUST
+        res.status(500).json({ message: error.message });
     }
 });
 
@@ -46,9 +62,18 @@ router.post("/", async (req, res) => {
         const complaint = new Complaint(req.body);
         await complaint.save();
 
+        // 🔔 Notify admin
+        await Notification.create({
+            userId: req.body.user, // or actual admin user id
+            message: "New complaint submitted",
+            type: "complaint"
+        });
+
         res.status(201).json({ message: "Complaint submitted successfully" });
+
     } catch (error) {
-        res.status(500).json({ message: "Server error" });
+        console.error("COMPLAINT ERROR:", error); // 🔥 MUST
+        res.status(500).json({ message: error.message });
     }
 });
 

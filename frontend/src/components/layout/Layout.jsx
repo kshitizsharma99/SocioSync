@@ -4,13 +4,13 @@ import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
 import SupportWorkspace from "../support/SupportWorkspace";
 
-function Layout({ children }) {
+function Layout({ children, user }) {
     const [supportOpen, setSupportOpen] = useState(false);
 
     return (
         <div className="h-screen w-full flex flex-col">
 
-            <Navbar onOpenSupport={() => setSupportOpen(true)} />
+            <Navbar onOpenSupport={() => setSupportOpen(true)} user={user} />
 
             <main className="flex-1">
                 {children}

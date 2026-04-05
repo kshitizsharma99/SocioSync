@@ -5,7 +5,7 @@ const cors = require("cors");
 const authRoutes = require("./routes/authRoutes")
 const complaintRoutes = require("./routes/complaintRoutes");
 const app = express();
-
+const notificationRoutes = require("./routes/notificationRoutes");
 
 dotenv.config();
 
@@ -14,7 +14,7 @@ app.use(cors({
     credentials: true
 }));
 
-
+app.use("/api/notifications", notificationRoutes);
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/complaints", complaintRoutes);
@@ -27,6 +27,10 @@ mongoose.connect(process.env.MONGO_URI)
     .catch((err) => {
         console.log("❌ MongoDB Connection Error:", err);
     });
+
+mongoose.connection.once("open", () => {
+    console.log("🔥 Connected DB:", mongoose.connection.name);
+});
 
 
 app.get("/", (req, res) => {

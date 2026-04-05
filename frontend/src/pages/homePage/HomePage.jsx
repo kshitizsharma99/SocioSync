@@ -2,6 +2,8 @@ import { Button } from "antd";
 import { NavLink } from "react-router-dom";
 function HomePage() {
 
+  const user = JSON.parse(localStorage.getItem("user"));
+
   return (
     <div className="flex flex-col-reverse lg:flex-row items-center w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-20 py-12">
 
@@ -19,11 +21,22 @@ function HomePage() {
 
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto pt-4 justify-center lg:justify-start">
 
-          <NavLink to={"/auth"}>
-            <button className="flex-1 sm:flex-none bg-[#FF6B6B] hover:bg-[#ff5252] text-white font-semibold px-8 py-3 rounded-full transition-all duration-300">
-              Get Started Now
-            </button>
-          </NavLink>
+          {user ? (
+
+            <NavLink to={"/services"}>
+              <button className="flex-1 sm:flex-none bg-[#FF6B6B] hover:bg-[#ff5252] text-white font-semibold px-8 py-3 rounded-full transition-all duration-300">
+                Browse Services
+              </button>
+            </NavLink>
+
+          ) : (
+            <NavLink to={"/auth"}>
+              <button className="flex-1 sm:flex-none bg-[#FF6B6B] hover:bg-[#ff5252] text-white font-semibold px-8 py-3 rounded-full transition-all duration-300">
+                Get Started Now
+              </button>
+            </NavLink>
+
+          )}
 
           <NavLink to={"/services"}>
             <button className="flex-1 sm:flex-none border-2 border-[#FF6B6B] text-[#FF6B6B] font-semibold px-8 py-3 rounded-full hover:bg-[#FF6B6B] hover:text-white transition-all duration-300">

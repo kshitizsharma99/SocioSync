@@ -21,14 +21,14 @@ function BookingModal({ open, service, onClose }) {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    user: user.id,
+                    user: user._id,
                     serviceTitle: service?.title,
                     name: values.name,
                     phone: values.phone,
                     address: values.address,
                     description: values.description,
-                    preferredDate: values.date,
-                    preferredTime: values.time,
+                    preferredDate: values.date ? values.date.toISOString() : null,
+                    preferredTime: values.time ? values.time.format("HH:mm") : null,
                     urgency: values.urgency
                 })
             });
@@ -50,6 +50,8 @@ function BookingModal({ open, service, onClose }) {
             setLoading(false);
         }
     };
+
+
 
     return (
         <Modal

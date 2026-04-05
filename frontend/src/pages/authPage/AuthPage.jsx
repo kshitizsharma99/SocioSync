@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function AuthPage() {
+function AuthPage({ setUser }) {
   const [isLogin, setIsLogin] = useState(true);
   const [role, setRole] = useState(null);
   const navigate = useNavigate();
@@ -96,6 +96,7 @@ function AuthPage() {
 
         if (response.ok) {
           localStorage.setItem("user", JSON.stringify(data.user));
+          setUser(data.user);
 
           if (data.user.role === "admin") {
             navigate("/services");
