@@ -6,7 +6,9 @@ const authRoutes = require("./routes/authRoutes")
 const complaintRoutes = require("./routes/complaintRoutes");
 const app = express();
 const notificationRoutes = require("./routes/notificationRoutes");
+const dns = require("dns");
 
+dns.setServers(["1.1.1.1", "8.8.8.8"]);
 dotenv.config();
 
 app.use(cors({
