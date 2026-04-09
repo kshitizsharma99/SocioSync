@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { message } from "antd";
 import {
   Card,
   Table,
@@ -71,9 +72,12 @@ export default function AdminPage() {
         body: JSON.stringify({ status: newStatus }),
       });
 
+      message.success("Status updated successfully 🔥");
+
       fetchComplaints();
     } catch (err) {
-      console.error("Status update failed:", err);
+      message.error("Status update failed ❌");
+      console.error(err);
     }
   };
 
@@ -129,13 +133,20 @@ export default function AdminPage() {
       title: "Status",
       dataIndex: "status",
       render: (status) => {
-        let color = "blue";
-        if (status === "pending") color = "red";
-        if (status === "seen") color = "orange";
-        if (status === "scheduled") color = "purple";
-        if (status === "completed") color = "green";
+        const styles = {
+          pending: "bg-red-100 text-red-600",
+          seen: "bg-yellow-100 text-yellow-600",
+          scheduled: "bg-purple-100 text-purple-600",
+          completed: "bg-green-100 text-green-600",
+        };
 
-        return <Tag color={color}>{status}</Tag>;
+        return (
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-medium capitalize transition-all duration-200 ${styles[status]}`}
+          >
+            {status}
+          </span>
+        );
       },
     },
   ];
@@ -153,21 +164,24 @@ export default function AdminPage() {
         <div>
           <Row gutter={[16, 16]}>
             <Col xs={24} md={8}>
-              <Card className="border border-gray-400 shadow-md rounded-xl">
+              <Card className="rounded-xl border border-gray-200 shadow-md 
+transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                 <p className="text-xs text-gray-400 uppercase">Total</p>
                 <h2 className="text-2xl font-bold">{total}</h2>
               </Card>
             </Col>
 
             <Col xs={24} md={8}>
-              <Card className="shadow-md rounded-xl border border-gray-400">
+              <Card className="rounded-xl border border-gray-200 shadow-md 
+transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                 <p className="text-xs text-gray-400 uppercase">Pending</p>
                 <h2 className="text-2xl font-bold text-red-500">{pending}</h2>
               </Card>
             </Col>
 
             <Col xs={24} md={8}>
-              <Card className="shadow-md rounded-xl border border-gray-400">
+              <Card className="rounded-xl border border-gray-200 shadow-md 
+transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                 <p className="text-xs text-gray-400 uppercase">Completed</p>
                 <h2 className="text-2xl font-bold text-green-500">
                   {completed}
@@ -179,7 +193,8 @@ export default function AdminPage() {
 
 
         <div className="my-2">
-          <Card className="border border-gray-400 shadow-md rounded-xl">
+          <Card className="rounded-xl border border-gray-200 shadow-md 
+transition-all duration-300 hover:shadow-lg">
             <div className="flex flex-col md:flex-row gap-3">
               <Select
                 value={serviceFilter}
@@ -216,9 +231,10 @@ export default function AdminPage() {
 
 
         <div>
-          <Card className="mt-4 shadow-lg rounded-xl">
+          <Card className="mt-4 rounded-xl border border-gray-200 shadow-md 
+transition-all duration-300 hover:shadow-lg overflow-hidden">
             {loading ? (
-              <div className="flex justify-center py-10">
+              <div className="flex justify-center py-10 animate-pulse">
                 <Spin size="large" />
               </div>
             ) : (
@@ -226,6 +242,14 @@ export default function AdminPage() {
                 columns={columns}
                 dataSource={filteredComplaints}
                 pagination={{ pageSize: 4 }}
+
+                rowClassName={(record) =>
+                  `transition-all duration-200 cursor-pointer
+     ${record.key === selectedComplaint?.key
+                    ? "bg-blue-50"
+                    : "hover:bg-gray-50"}`
+                }
+
                 onRow={(record) => ({
                   onClick: () => setSelectedComplaint(record),
                 })}
