@@ -2,6 +2,8 @@ import { Avatar, Dropdown } from "antd";
 import {
     UserOutlined,
 } from "@ant-design/icons";
+import ProfileModal from "../ProfileModal";
+import { useState } from "react";
 
 function UserMenu() {
 
@@ -11,11 +13,13 @@ function UserMenu() {
         localStorage.removeItem("user");
         window.location.reload();
     };
+    const [profileOpen, setProfileOpen] = useState(false);
 
     const items = [
         {
             key: "profile",
             label: "Profile",
+            onClick: () => setProfileOpen(true),
         },
         {
             key: "settings",
@@ -53,6 +57,10 @@ function UserMenu() {
 
                 </div>
             </Dropdown>
+            <ProfileModal
+                open={profileOpen}
+                onClose={() => setProfileOpen(false)}
+            />
         </div>
     );
 }
