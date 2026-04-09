@@ -16,12 +16,10 @@ export default function ProfileModal({ open, onClose }) {
         }
     }, []);
 
-    // Handle input changes
     const handleChange = (e) => {
         setUser({ ...user, [e.target.name]: e.target.value });
     };
 
-    // Handle image upload (base64 preview)
     const handleUpload = (file) => {
         const reader = new FileReader();
         reader.onload = () => {
@@ -29,15 +27,15 @@ export default function ProfileModal({ open, onClose }) {
             setUser({ ...user, photo: reader.result });
         };
         reader.readAsDataURL(file);
-        return false; // prevent auto upload
+        return false;
     };
 
-    // Save profile
+
     const handleSave = () => {
         localStorage.setItem("user", JSON.stringify(user));
         message.success("Profile updated!");
         onClose();
-        window.location.reload(); // refresh UI
+        window.location.reload();
     };
 
     return (
@@ -49,7 +47,6 @@ export default function ProfileModal({ open, onClose }) {
         >
             <div className="flex flex-col gap-4">
 
-                {/* Profile Image */}
                 <div className="flex flex-col items-center gap-2">
                     <img
                         src={preview || "https://via.placeholder.com/100"}
@@ -62,7 +59,7 @@ export default function ProfileModal({ open, onClose }) {
                     </Upload>
                 </div>
 
-                {/* Name */}
+
                 <Input
                     placeholder="Full Name"
                     name="fullName"
@@ -70,7 +67,7 @@ export default function ProfileModal({ open, onClose }) {
                     onChange={handleChange}
                 />
 
-                {/* Contact */}
+
                 <Input
                     placeholder="Contact Number"
                     name="contact"
@@ -78,7 +75,6 @@ export default function ProfileModal({ open, onClose }) {
                     onChange={handleChange}
                 />
 
-                {/* Flat No */}
                 <Input
                     placeholder="Flat / Room No"
                     name="flatNo"
@@ -86,7 +82,7 @@ export default function ProfileModal({ open, onClose }) {
                     onChange={handleChange}
                 />
 
-                {/* Description */}
+
                 <TextArea
                     placeholder="About / Description"
                     name="description"
@@ -95,7 +91,7 @@ export default function ProfileModal({ open, onClose }) {
                     rows={3}
                 />
 
-                {/* Save Button */}
+
                 <Button type="primary" onClick={handleSave}>
                     Save Changes
                 </Button>
