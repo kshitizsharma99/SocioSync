@@ -9,7 +9,9 @@ import {
   Col,
   Avatar,
   Spin,
+  Steps
 } from "antd";
+
 
 const { Option } = Select;
 
@@ -85,6 +87,13 @@ export default function AdminPage() {
     return statusMatch && serviceMatch;
   });;
 
+  const statusIndex = {
+    pending: 0,
+    seen: 1,
+    scheduled: 2,
+    completed: 3
+  }[selectedComplaint.status];
+
   // 📊 Stats
   const total = complaints.length;
   const pending = complaints.filter((c) => c.status === "pending").length;
@@ -140,7 +149,7 @@ export default function AdminPage() {
       {/* LEFT SIDE */}
       <div className="w-full lg:w-2/3 flex flex-col justify-between">
 
-        {/* Stats */}
+
         <div>
           <Row gutter={[16, 16]}>
             <Col xs={24} md={8}>
@@ -168,7 +177,7 @@ export default function AdminPage() {
           </Row>
         </div>
 
-        {/* Filters */}
+
         <div className="my-2">
           <Card className="border border-gray-400 shadow-md rounded-xl">
             <div className="flex flex-col md:flex-row gap-3">
@@ -205,7 +214,7 @@ export default function AdminPage() {
           </Card>
         </div>
 
-        {/* Table */}
+
         <div>
           <Card className="mt-4 shadow-lg rounded-xl">
             {loading ? (
@@ -226,32 +235,77 @@ export default function AdminPage() {
         </div>
       </div>
 
-      {/* RIGHT PANEL */}
+
+
       <div className="w-full lg:w-1/3">
-        <Card className="h-full shadow-lg border border-gray-400 rounded-xl">
+        <Card className="h-full shadow-lg border-0 rounded-2xl bg-white">
           {selectedComplaint ? (
-            <div className="space-y-4">
+            <div className="space-y-5">
 
-              <h2 className="text-lg font-semibold">
-                Complaint #{selectedComplaint.id}
-              </h2>
+              {/* HEADER */}
+              <div className="border-b pb-3">
+                <h2 className="text-xl font-semibold text-gray-800">
+                  Complaint #{selectedComplaint.id}
+                </h2>
+                <p className="text-sm text-gray-400">
+                  Manage complaint details and status
+                </p>
+              </div>
 
-              <p><strong>User:</strong> {selectedComplaint.user}</p>
-              <p><strong>Status:</strong> {selectedComplaint.status}</p>
-              <p><strong>Urgency:</strong> {selectedComplaint.urgency}</p>
+              {/* USER INFO */}
+              <div className="bg-gray-50 p-4 rounded-xl">
+                <h3 className="text-sm font-semibold text-gray-500 mb-2">User Info</h3>
+                <div className="space-y-1 text-sm">
+                  <p><span className="font-medium">User:</span> {selectedComplaint.user}</p>
+                  <p><span className="font-medium">Phone:</span> {selectedComplaint.fullData.phone}</p>
+                  <p><span className="font-medium">Address:</span> {selectedComplaint.fullData.address}</p>
+                </div>
+              </div>
 
-              {/* EXTRA DETAILS */}
-              <p><strong>Service:</strong> {selectedComplaint.fullData.serviceTitle}</p>
-              <p><strong>Phone:</strong> {selectedComplaint.fullData.phone}</p>
-              <p><strong>Address:</strong> {selectedComplaint.fullData.address}</p>
-              <p><strong>Description:</strong> {selectedComplaint.fullData.description}</p>
+              {/* SERVICE INFO */}
+              <div className="bg-gray-50 p-4 rounded-xl">
+                <h3 className="text-sm font-semibold text-gray-500 mb-2">Service Details</h3>
+                <div className="space-y-1 text-sm">
+                  <p><span className="font-medium">Service:</span> {selectedComplaint.fullData.serviceTitle}</p>
+                  <p><span className="font-medium">Urgency:</span>
+                    <span className={`ml-2 px-2 py-0.5 rounded text-xs ${selectedComplaint.urgency === "EMERGENCY"
+                      ? "bg-red-100 text-red-600"
+                      : "bg-green-100 text-green-600"
+                      }`}>
+                      {selectedComplaint.urgency}
+                    </span>
+                  </p>
+                  <p><span className="font-medium">Description:</span> {selectedComplaint.fullData.description}</p>
+                </div>
+              </div>
 
-              {/* Status Update */}
-              <div>
-                <p className="text-sm font-semibold mb-1">Update Status</p>
+              {/* STATUS */}
+              <div className="bg-gray-50 p-4 rounded-xl">
+                <h3 className="text-sm font-semibold text-gray-500 mb-2">Progress</h3>
+
+                <p className="text-sm mb-2">
+                  <span className="font-medium">Status:</span>{" "}
+                  <span className="capitalize">{selectedComplaint.status}</span>
+                </p>
+
+                <Steps
+                  current={statusIndex}
+                  size="small"
+                  items={[
+                    { title: "Pending" },
+                    { title: "Seen" },
+                    { title: "Scheduled" },
+                    { title: "Completed" }
+                  ]}
+                />
+              </div>
+
+              {/* ACTIONS */}
+              <div className="bg-gray-50 p-4 rounded-xl">
+                <h3 className="text-sm font-semibold text-gray-500 mb-2">Actions</h3>
 
                 <Select
-                  defaultValue="choose status"
+                  placeholder="Update status"
                   className="w-full"
                   onChange={(value) =>
                     handleStatusChange(selectedComplaint.key, value)
@@ -266,12 +320,13 @@ export default function AdminPage() {
 
             </div>
           ) : (
-            <div className="text-gray-400 text-center py-10">
+            <div className="text-gray-400 text-center py-16">
               Select a complaint to view details
             </div>
           )}
         </Card>
       </div>
     </div>
+
   );
 }
