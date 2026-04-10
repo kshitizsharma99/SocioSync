@@ -20,22 +20,47 @@ export default function ProfileModal({ open, onClose }) {
         setUser({ ...user, [e.target.name]: e.target.value });
     };
 
+    const [file, setFile] = useState(null);
+
     const handleUpload = (file) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-            setPreview(reader.result);
-            setUser({ ...user, photo: reader.result });
-        };
-        reader.readAsDataURL(file);
+        setPreview(URL.createObjectURL(file));
+        setFile(file);
         return false;
     };
 
 
-    const handleSave = () => {
-        localStorage.setItem("user", JSON.stringify(user));
+    const handleSave = async () => {
+    try {
+        const formData = new FormData();
+
+        formData.append("fullName", user.fullName);
+        formData.append("contact", user.contact);
+        formData.append("flatNo", user.flatNo);
+        formData.append("description", user.description);
+
+        if (file) {
+            formData.append("photo", file);
+        }
+
+        const res = await fetch(
+            `http://localhost:5000/api/users/update-profile/${user._id}`,
+            {
+                method: "PUT",
+                body: formData
+            }
+        );
+
+        const data = await res.json();
+
+        localStorage.setItem("user", JSON.stringify(data));
+
         message.success("Profile updated!");
         onClose();
         window.location.reload();
+
+        } catch (error) {
+            message.error("Update failed");
+        }
     };
 
     return (
@@ -49,10 +74,13 @@ export default function ProfileModal({ open, onClose }) {
 
                 <div className="flex flex-col items-center gap-2">
                     <img
-                        src={preview || "https://via.placeholder.com/100"}
-                        alt="profile"
-                        className="w-24 h-24 rounded-full object-cover border"
-                    />
+                    src={
+                        preview ||
+                        (user.photo
+                            ? `http://localhost:5000/uploads/${user.photo}`
+                            : "https://via.placeholder.com/100")
+                    }
+                />
 
                     <Upload beforeUpload={handleUpload} showUploadList={false}>
                         <Button icon={<UploadOutlined />}>Change Photo</Button>

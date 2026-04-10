@@ -43,10 +43,14 @@ function UserMenu() {
 
                     <div className="relative">
                         <Avatar
-                            size={30}
-                            src={user.photo}
-                            icon={<UserOutlined />}
-                        />
+                        size={30}
+                        src={
+                            user.photo
+                                ? `http://localhost:5000/uploads/${user.photo}`
+                                : null
+                        }
+                        icon={<UserOutlined />}
+                    />
                         <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
                     </div>
 

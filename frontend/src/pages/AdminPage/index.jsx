@@ -96,7 +96,7 @@ export default function AdminPage() {
     seen: 1,
     scheduled: 2,
     completed: 3
-  }[selectedComplaint.status];
+  }[selectedComplaint?.status]?? 0;
 
   // 📊 Stats
   const total = complaints.length;
