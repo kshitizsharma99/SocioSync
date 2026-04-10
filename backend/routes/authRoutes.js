@@ -56,4 +56,31 @@ router.post("/login", async (req, res) => {
     }
 });
 
+
+router.put("/update-profile/:id", upload.single("photo"), async (req, res) => {
+    try {
+        const updates = {
+            fullName: req.body.fullName,
+            contact: req.body.contact,
+            flatNo: req.body.flatNo,
+            description: req.body.description,
+        };
+
+        // ✅ if image uploaded
+        if (req.file) {
+            updates.photo = req.file.filename;
+        }
+
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            updates,
+            { new: true }
+        );
+
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 module.exports = router;

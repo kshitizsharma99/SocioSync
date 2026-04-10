@@ -57,14 +57,41 @@ router.get("/my/:userId", async (req, res) => {
     }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", upload.single("photo"), async (req, res) => {
     try {
-        const complaint = new Complaint(req.body);
+        const {
+            user,
+            serviceTitle,
+            name,
+            phone,
+            address,
+            description,
+            preferredDate,
+            preferredTime,
+            urgency
+        } = req.body;
+
+        // ✅ Get uploaded file
+        const photo = req.file ? req.file.filename : null;
+
+        const complaint = new Complaint({
+            user,
+            serviceTitle,
+            name,
+            phone,
+            address,
+            description,
+            preferredDate,
+            preferredTime,
+            urgency,
+            photo   // ✅ store image
+        });
+
         await complaint.save();
 
         // 🔔 Notify admin
         await Notification.create({
-            userId: req.body.user, // or actual admin user id
+            userId: user,
             message: "New complaint submitted",
             type: "complaint"
         });
@@ -72,7 +99,7 @@ router.post("/", async (req, res) => {
         res.status(201).json({ message: "Complaint submitted successfully" });
 
     } catch (error) {
-        console.error("COMPLAINT ERROR:", error); // 🔥 MUST
+        console.error("COMPLAINT ERROR:", error);
         res.status(500).json({ message: error.message });
     }
 });

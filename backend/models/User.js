@@ -24,7 +24,10 @@ const userSchema = new mongoose.Schema({
     },
     buildingName: {
         type: String
-    }
+    },
+    photo: {
+    type: String   // will store filename
+}
 }, { timestamps: true });
 
 module.exports = mongoose.model("User", userSchema);

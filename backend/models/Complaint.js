@@ -41,7 +41,13 @@ const complaintSchema = new mongoose.Schema({
         type: String,
         enum: ["pending", "seen", "scheduled", "completed"],
         default: "pending"
+    },
+
+    // ✅ ADD THIS FIELD
+    photo: {
+        type: String   // will store filename like "171234567-image.jpg"
     }
+
 }, { timestamps: true });
 
 module.exports = mongoose.model("Complaint", complaintSchema);
