@@ -17,11 +17,12 @@ import {
   EnvironmentOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
-import { uploadRef } from "react";
+
 
 function BookingModal({ open, service, onClose }) {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [preview, setPreview] = useState("");
 
   const handleSubmit = async () => {
     try {
@@ -176,15 +177,23 @@ function BookingModal({ open, service, onClose }) {
           getValueFromEvent={(e) => e.fileList}
         >
           <Upload
-            ref={uploadRef}
-            beforeUpload={() => false}
+            beforeUpload={(file) => {
+              setPreview(URL.createObjectURL(file));
+              return false;
+            }}
             showUploadList={false}
-            className="!w-full"
           >
+            {preview && (
+              <img
+                src={preview}
+                alt="preview"
+                style={{ width: 100, height: 100, borderRadius: "10px" }}
+              />
+            )}
             <Input
               readOnly
               placeholder="Upload Photo (Optional)"
-              onClick={() => uploadRef.current?.upload?.fileInput?.click()}
+
               suffix={
                 <CameraOutlined className="text-gray-500 cursor-pointer" />
               }

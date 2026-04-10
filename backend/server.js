@@ -7,7 +7,7 @@ const complaintRoutes = require("./routes/complaintRoutes");
 const app = express();
 const notificationRoutes = require("./routes/notificationRoutes");
 const dns = require("dns");
-const multer = require("multer");
+
 
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
 dotenv.config();
@@ -23,19 +23,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/complaints", complaintRoutes);
 app.use("/uploads", express.static("uploads"));
 
-
-
-
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, "uploads/");
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + "-" + file.originalname);
-    }
-});
-
-const upload = multer({ storage });
 
 
 mongoose.connect(process.env.MONGO_URI)

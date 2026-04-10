@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Complaint = require("../models/Complaint");
 const Notification = require("../models/Notification");
+const upload = require("../middleware/upload");
 
 router.get("/", async (req, res) => {
     try {
