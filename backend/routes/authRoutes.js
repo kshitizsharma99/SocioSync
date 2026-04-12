@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const upload = require("../middleware/upload");
+const jwt = require("jsonwebtoken");   // 👈 add at top if not present
 
-const ADMIN_CODE = "SOCIO2026";
+const ADMIN_CODE = process.env.ADMIN_CODE;
 
 router.post("/signup", async (req, res) => {
     try {
@@ -33,9 +34,11 @@ router.post("/signup", async (req, res) => {
     }
 });
 
+
+
 router.post("/login", async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, rememberMe } = req.body;
 
         const user = await User.findOne({ email });
 
@@ -47,9 +50,22 @@ router.post("/login", async (req, res) => {
             return res.status(400).json({ message: "Invalid password" });
         }
 
+        // 🔥 CREATE TOKEN
+        const token = jwt.sign(
+            {
+                id: user._id,
+                role: user.role
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: rememberMe ? "30d" : "1d"
+            }
+        );
+
         res.status(200).json({
             message: "Login successful",
-            user: user
+            token,   // 👈 NEW
+            user
         });
 
     } catch (error) {

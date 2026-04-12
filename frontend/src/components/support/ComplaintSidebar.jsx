@@ -24,7 +24,7 @@ function ComplaintSidebar({
     console.log("Current role:", role);
 
     return (
-        <div className="w-full lg:w-80 bg-rgba(255, 255, 255, 0.64) rounded-2xl shadow-sm p-4 border border-gray-100 flex flex-col gap-4">
+        <div className="w-full lg:w-80 h-full bg-rgba(255, 255, 255, 0.64) rounded-2xl shadow-sm p-4 border border-gray-100 flex flex-col gap-4">
 
 
             <Select

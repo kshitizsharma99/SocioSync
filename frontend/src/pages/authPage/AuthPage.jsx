@@ -5,6 +5,7 @@ function AuthPage({ setUser }) {
   const [isLogin, setIsLogin] = useState(true);
   const [role, setRole] = useState(null);
   const navigate = useNavigate();
+  const [rememberMe, setRememberMe] = useState(false);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -88,13 +89,15 @@ function AuthPage({ setUser }) {
           },
           body: JSON.stringify({
             email: formData.email,
-            password: formData.password
+            password: formData.password,
+            rememberMe
           })
         });
 
         const data = await response.json();
 
         if (response.ok) {
+          localStorage.setItem("token", data.token);
           localStorage.setItem("user", JSON.stringify(data.user));
           setUser(data.user);
 
@@ -274,7 +277,10 @@ function AuthPage({ setUser }) {
                 {isLogin && (
                   <div className="flex justify-between text-sm text-gray-500">
                     <label className="flex items-center gap-2">
-                      <input type="checkbox" />
+                      <input
+                        type="checkbox"
+                        onChange={(e) => setRememberMe(e.target.checked)}
+                      />
                       Remember me
                     </label>
                     <button type="button" className="hover:underline">

@@ -19,8 +19,12 @@ function SupportWorkspace() {
 
     const fetchComplaints = async () => {
         try {
+            const token = localStorage.getItem("token");   // 👈 get token
+
             const res = await axios.get("http://localhost:5000/api/complaints", {
-                withCredentials: true
+                headers: {
+                    Authorization: `Bearer ${token}`   // 👈 SEND TOKEN
+                }
             });
 
             setComplaints(res.data);
@@ -34,7 +38,7 @@ function SupportWorkspace() {
         } finally {
             setLoading(false);
         }
-    };
+    };;
 
     if (loading) {
         return (
@@ -46,7 +50,7 @@ function SupportWorkspace() {
 
     return (
         <div className="h-[75vh] overflow-y-auto custom-scrollbar p-2">
-            <div className="flex flex-col lg:flex-row gap-6">
+            <div className="flex flex-col lg:flex-row gap-6 h-full">
 
                 <ComplaintSidebar
                     complaints={complaints}

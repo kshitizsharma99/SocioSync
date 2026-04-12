@@ -29,7 +29,13 @@ export default function AdminPage() {
   const fetchComplaints = async () => {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:5000/api/complaints");
+      const token = localStorage.getItem("token");
+
+      const res = await fetch("http://localhost:5000/api/complaints", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       const data = await res.json();
 
       const formatted = data.map((item) => ({
@@ -96,7 +102,7 @@ export default function AdminPage() {
     seen: 1,
     scheduled: 2,
     completed: 3
-  }[selectedComplaint?.status]?? 0;
+  }[selectedComplaint?.status] ?? 0;
 
   // 📊 Stats
   const total = complaints.length;
@@ -261,8 +267,9 @@ transition-all duration-300 hover:shadow-lg overflow-hidden">
 
 
 
-      <div className="w-full lg:w-1/3">
-        <Card className="h-full shadow-lg border-0 rounded-2xl bg-white">
+      <div className="w-full h-full lg:w-1/3">
+
+        <Card className="h-full overflow-y-auto p-2 custom-scrollbar shadow-lg border-0 rounded-2xl bg-white">
           {selectedComplaint ? (
             <div className="space-y-5">
 
