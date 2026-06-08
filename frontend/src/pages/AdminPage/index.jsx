@@ -23,6 +23,7 @@ export default function AdminPage() {
   const [selectedComplaint, setSelectedComplaint] = useState(null);
   const [statusFilter, setStatusFilter] = useState("all");
   const [serviceFilter, setServiceFilter] = useState("category");
+  const [selectedDate, setSelectedDate] = useState(null);
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -135,8 +136,13 @@ export default function AdminPage() {
     const serviceMatch =
       serviceFilter === "category" || item.services === serviceFilter;
 
-    return statusMatch && serviceMatch;
-  });;
+    const dateMatch =
+      !selectedDate ||
+      new Date(item.fullData.createdAt).toDateString() ===
+      selectedDate.toDate().toDateString();
+
+    return statusMatch && serviceMatch && dateMatch;
+  });
 
   const statusIndex = {
     pending: 0,
@@ -266,12 +272,15 @@ transition-all duration-300 hover:shadow-lg">
               >
                 <Option value="all">Status: All</Option>
                 <Option value="pending">Pending</Option>
-                <Option value="seen">Seen</Option>
-                <Option value="scheduled">Scheduled</Option>
+                <Option value="assigned">Assigned</Option>
+                <Option value="in-progress">In Progress</Option>
                 <Option value="completed">Completed</Option>
               </Select>
 
-              <DatePicker className="w-full md:w-48" />
+              <DatePicker
+                className="w-full md:w-48"
+                onChange={(date) => setSelectedDate(date)}
+              />
             </div>
           </Card>
         </div>

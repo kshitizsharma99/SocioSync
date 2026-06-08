@@ -128,29 +128,75 @@ function MechanicDashboard() {
 
                 <Row gutter={[16, 16]}>
                     <Col span={8}>
-                        <Card><p>Total</p><h2>{total}</h2></Card>
+                        <Card
+                            className="rounded-xl border border-gray-200 shadow-md
+                transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+                        >
+                            <p className="text-xs text-gray-400 uppercase">Total</p>
+                            <h2 className="text-2xl font-bold text-blue-600">
+                                {total}
+                            </h2>
+                        </Card>
                     </Col>
+
                     <Col span={8}>
-                        <Card><p>In Progress</p><h2>{inProgress}</h2></Card>
+                        <Card
+                            className="rounded-xl border border-gray-200 shadow-md
+                transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+                        >
+                            <p className="text-xs text-gray-400 uppercase">
+                                In Progress
+                            </p>
+                            <h2 className="text-2xl font-bold text-orange-500">
+                                {inProgress}
+                            </h2>
+                        </Card>
                     </Col>
+
                     <Col span={8}>
-                        <Card><p>Completed</p><h2>{completed}</h2></Card>
+                        <Card
+                            className="rounded-xl border border-gray-200 shadow-md
+                transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+                        >
+                            <p className="text-xs text-gray-400 uppercase">
+                                Completed
+                            </p>
+                            <h2 className="text-2xl font-bold text-green-600">
+                                {completed}
+                            </h2>
+                        </Card>
                     </Col>
                 </Row>
 
-                <Card>
+                <Card
+                    className="rounded-xl border border-gray-200 shadow-md
+        transition-all duration-300 hover:shadow-lg overflow-hidden"
+                >
                     {loading ? (
-                        <Spin />
+                        <div className="flex justify-center py-10">
+                            <Spin size="large" />
+                        </div>
                     ) : (
                         <Table
                             columns={columns}
                             dataSource={complaints}
+                            pagination={{ pageSize: 5 }}
+
+                            rowClassName={(record) =>
+                                `transition-all duration-200 cursor-pointer
+                    ${record.key === selectedComplaint?.key
+                                    ? "bg-blue-50"
+                                    : "hover:bg-gray-50"
+                                }`
+                            }
+
                             onRow={(record) => ({
                                 onClick: () => setSelectedComplaint(record)
                             })}
                         />
                     )}
                 </Card>
+
             </div>
 
             {/* RIGHT */}
@@ -159,15 +205,75 @@ function MechanicDashboard() {
                     {selectedComplaint ? (
                         <div className="space-y-4">
 
-                            <h2 className="font-bold text-lg">
-                                Complaint #{selectedComplaint.id}
-                            </h2>
+                            <div className="flex justify-between items-center">
+                                <h2 className="font-bold text-lg">
+                                    Complaint #{selectedComplaint.id}
+                                </h2>
 
-                            <p><b>User:</b> {selectedComplaint.user}</p>
-                            <p><b>Service:</b> {selectedComplaint.fullData.serviceTitle}</p>
-                            <p><b>Description:</b> {selectedComplaint.fullData.description}</p>
+                                <Tag
+                                    color={
+                                        selectedComplaint.fullData.urgency === "emergency"
+                                            ? "red"
+                                            : "green"
+                                    }
+                                >
+                                    {selectedComplaint.fullData.urgency}
+                                </Tag>
+                            </div>
+
+                            <p>
+                                <b>User:</b> {selectedComplaint.user}
+                            </p>
+
+                            <p>
+                                <b>Phone:</b> {selectedComplaint.fullData.phone}
+                            </p>
+
+                            <p>
+                                <b>Address:</b> {selectedComplaint.fullData.address}
+                            </p>
+
+                            <p>
+                                <b>Service:</b> {selectedComplaint.fullData.serviceTitle}
+                            </p>
+
+                            <p>
+                                <b>Created:</b>{" "}
+                                {new Date(
+                                    selectedComplaint.fullData.createdAt
+                                ).toLocaleString()}
+                            </p>
+
+                            <div>
+                                <p>
+                                    <b>Description:</b>
+                                </p>
+
+                                <div className="bg-gray-50 p-3 rounded-lg border max-h-40 overflow-y-auto mt-1">
+                                    {selectedComplaint.fullData.description}
+                                </div>
+                            </div>
+
+                            {selectedComplaint.fullData.photo && (
+                                <div>
+                                    <p className="font-semibold mb-2">
+                                        Attached Photo
+                                    </p>
+
+                                    <img
+                                        src={`http://localhost:5000/uploads/${selectedComplaint.fullData.photo}`}
+                                        alt="Complaint"
+                                        className="w-full max-h-64 object-cover rounded-lg border"
+                                    />
+                                </div>
+                            )}
 
                             <Steps
+                                direction={
+                                    selectedComplaint?.fullData?.photo
+                                        ? "horizontal"
+                                        : "vertical"
+                                }
                                 current={statusIndex}
                                 items={[
                                     { title: "Pending" },

@@ -13,17 +13,17 @@ router.get("/", auth, async (req, res) => {
 
         if (req.user.role === "admin") {
             complaints = await Complaint.find()
-                .populate("user", "fullName email");
+                .populate("user", "fullName email").sort({ createdAt: -1 });
         }
         else if (req.user.role === "mechanic") {
             complaints = await Complaint.find({
                 assignedTo: req.user.id
-            }).populate("user", "fullName email");
+            }).populate("user", "fullName email").sort({ createdAt: -1 });
         }
         else {
             complaints = await Complaint.find({
                 user: req.user.id
-            });
+            }).sort({ createdAt: -1 });
         }
 
         res.json(complaints);

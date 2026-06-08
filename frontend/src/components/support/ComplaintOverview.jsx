@@ -8,8 +8,8 @@ function ComplaintOverview({ complaint, role }) {
 
     const statusIndex = {
         pending: 0,
-        seen: 1,
-        scheduled: 2,
+        assigned: 1,
+        "in-progress": 2,
         completed: 3
     }[complaint.status];
 
@@ -54,37 +54,14 @@ function ComplaintOverview({ complaint, role }) {
                 current={statusIndex}
                 items={[
                     { title: "Pending" },
-                    { title: "Seen" },
-                    { title: "Scheduled" },
+                    { title: "Assigned" },
+                    { title: "In Progress" },
                     { title: "Completed" }
                 ]}
             />
 
 
             <Divider />
-
-            {role === "admin" && (<div className="flex gap-3 mb-6">
-                <button
-                    onClick={() => updateStatus("seen")}
-                    className="bg-yellow-500 text-white px-4 py-2 rounded"
-                >
-                    Mark as Seen
-                </button>
-
-                <button
-                    onClick={() => updateStatus("scheduled")}
-                    className="bg-blue-500 text-white px-4 py-2 rounded"
-                >
-                    Mark as Scheduled
-                </button>
-
-                <button
-                    onClick={() => updateStatus("completed")}
-                    className="bg-green-600 text-white px-4 py-2 rounded"
-                >
-                    Mark as Completed
-                </button>
-            </div>)}
 
 
             <div className="grid grid-cols-2 gap-6 mb-6">

@@ -9,15 +9,15 @@ function ComplaintSidebar({
 
     const statusColors = {
         pending: "red",
-        seen: "gold",
-        scheduled: "blue",
+        assigned: "blue",
+        "in-progress": "gold",
         completed: "green"
     };
 
     const statusSummary = {
         total: complaints.length,
-        pending: complaints.filter(c => c.status === "pending").length,
-        scheduled: complaints.filter(c => c.status === "scheduled").length,
+        inProgress: complaints.filter(c => c.status === "in-progress").length,
+        assigned: complaints.filter(c => c.status === "assigned").length,
         completed: complaints.filter(c => c.status === "completed").length
     };
 
@@ -81,16 +81,16 @@ function ComplaintSidebar({
                     </Card>
 
                     <Card size="small">
-                        <p className="text-xs text-gray-500">Pending</p>
+                        <p className="text-xs text-gray-500">In Progress</p>
                         <p className="text-lg font-semibold text-red-600">
-                            {statusSummary.pending}
+                            {statusSummary.inProgress}
                         </p>
                     </Card>
 
                     <Card size="small">
-                        <p className="text-xs text-gray-500">Scheduled</p>
+                        <p className="text-xs text-gray-500">Assigned</p>
                         <p className="text-lg font-semibold text-blue-600">
-                            {statusSummary.scheduled}
+                            {statusSummary.assigned}
                         </p>
                     </Card>
 
