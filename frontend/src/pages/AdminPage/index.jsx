@@ -83,13 +83,21 @@ export default function AdminPage() {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
+      const token = localStorage.getItem("token");
+
       await fetch(`http://localhost:5000/api/complaints/${id}/status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({ status: newStatus }),
       });
+
+      setSelectedComplaint(prev => ({
+        ...prev,
+        status: newStatus
+      }));
 
       message.success("Status updated successfully 🔥");
 
@@ -196,8 +204,8 @@ export default function AdminPage() {
     <div className="flex flex-col lg:flex-row gap-4 p-4 md:p-6 bg-transparent min-h-screen">
 
 
-      {/* LEFT SIDE */}
-      <div className="w-full lg:w-2/3 flex flex-col justify-between">
+
+      <div className="w-full lg:w-2/3 flex flex-col gap-6">
 
 
         <div>
@@ -367,7 +375,7 @@ transition-all duration-300 hover:shadow-lg overflow-hidden">
               <div className="bg-gray-50 p-4 rounded-xl">
                 <h3 className="text-sm font-semibold text-gray-500 mb-2">Actions</h3>
 
-                {/* 🔧 ASSIGN MECHANIC */}
+
                 {!selectedComplaint.fullData.assignedTo && (
                   <Select
                     placeholder="Assign Mechanic"
@@ -384,9 +392,9 @@ transition-all duration-300 hover:shadow-lg overflow-hidden">
                   </Select>
                 )}
 
-                {/* 🔄 UPDATE STATUS */}
+
                 <Select
-                  placeholder="Update status"
+                  value={selectedComplaint?.status}
                   className="w-full"
                   onChange={(value) =>
                     handleStatusChange(selectedComplaint.key, value)
