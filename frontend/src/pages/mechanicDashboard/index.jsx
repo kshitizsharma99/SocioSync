@@ -19,7 +19,7 @@ function MechanicDashboard() {
     const [selectedComplaint, setSelectedComplaint] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    // 🔥 fetch assigned complaints
+
     const fetchComplaints = async () => {
         try {
             setLoading(true);
@@ -58,7 +58,6 @@ function MechanicDashboard() {
         fetchComplaints();
     }, []);
 
-    // 🔄 status update
     const handleStatusChange = async (id, status) => {
         try {
             const token = localStorage.getItem("token");
@@ -87,7 +86,6 @@ function MechanicDashboard() {
         completed: 3
     }[selectedComplaint?.status] ?? 0;
 
-    // 📊 stats
     const total = complaints.length;
     const inProgress = complaints.filter(c => c.status === "in-progress").length;
     const completed = complaints.filter(c => c.status === "completed").length;

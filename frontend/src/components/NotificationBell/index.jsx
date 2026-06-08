@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { Badge, Dropdown, List } from "antd";
 import { BellOutlined } from "@ant-design/icons";
 import axios from "axios";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
 
 function NotificationBell() {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -44,21 +48,56 @@ function NotificationBell() {
     };
 
     const menu = (
-        <List
-            style={{ width: 300, maxHeight: 400, overflow: "auto" }}
-            dataSource={notifications}
-            renderItem={(item) => (
-                <List.Item
-                    onClick={() => markAsRead(item._id)}
-                    style={{
-                        cursor: "pointer",
-                        background: item.read ? "#fff" : "#f6ffed"
-                    }}
-                >
-                    {item.message}
-                </List.Item>
-            )}
-        />
+        <div
+            style={{
+                width: 320,
+                background: "#fff",
+                borderRadius: "12px",
+                boxShadow: "0 8px 24px rgba(0,0,0,0.12)"
+            }}
+        >
+            <div
+                style={{
+                    padding: "12px",
+                    fontWeight: "600",
+                    borderBottom: "1px solid #eee"
+                }}
+            >
+                Notifications
+            </div>
+            <List
+                style={{
+                    width: 320,
+                    maxHeight: 400,
+                    overflow: "auto",
+                    borderRadius: "12px",
+                    background: "#fff",
+                    boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
+                }}
+                dataSource={notifications}
+                locale={{
+                    emptyText: "🔔 No notifications yet"
+                }}
+                renderItem={(item) => (
+                    <List.Item
+                        onClick={() => markAsRead(item._id)}
+                        style={{
+                            cursor: "pointer",
+                            background: item.read ? "#fff" : "#f6ffed",
+                            padding: "12px"
+                        }}
+                    >
+                        <div>
+                            <div>{item.message}</div>
+
+                            <small style={{ color: "#888" }}>
+                                {dayjs(item.createdAt).fromNow()}
+                            </small>
+                        </div>
+                    </List.Item>
+                )}
+            />
+        </div>
     );
 
     return (
