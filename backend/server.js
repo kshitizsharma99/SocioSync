@@ -1,16 +1,17 @@
+require("dotenv").config();
+
 const express = require("express");
 const mongoose = require("mongoose");
-const dotenv = require("dotenv");
 const cors = require("cors");
-const authRoutes = require("./routes/authRoutes")
-const complaintRoutes = require("./routes/complaintRoutes");
-const app = express();
-const notificationRoutes = require("./routes/notificationRoutes");
-const dns = require("dns");
 
+const authRoutes = require("./routes/authRoutes");
+const complaintRoutes = require("./routes/complaintRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
+
+const dns = require("dns");
+const app = express();
 
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
-dotenv.config();
 
 app.use(cors({
     origin: "http://localhost:5173",

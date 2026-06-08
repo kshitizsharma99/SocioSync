@@ -18,6 +18,7 @@ const { Option } = Select;
 
 export default function AdminPage() {
   const [complaints, setComplaints] = useState([]);
+  const [mechanics, setMechanics] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedComplaint, setSelectedComplaint] = useState(null);
   const [statusFilter, setStatusFilter] = useState("all");
@@ -25,7 +26,7 @@ export default function AdminPage() {
 
   const user = JSON.parse(localStorage.getItem("user"));
 
-  // 🔥 Fetch complaints
+
   const fetchComplaints = async () => {
     try {
       setLoading(true);
@@ -45,7 +46,7 @@ export default function AdminPage() {
         urgency: item.urgency?.toUpperCase(),
         status: item.status,
         services: item.serviceTitle,
-        fullData: item, // 🔥 keep full object for detail panel
+        fullData: item,
       }));
 
       setComplaints(formatted);
@@ -56,18 +57,30 @@ export default function AdminPage() {
     }
   };
 
-  // 🔁 Polling
+  const fetchMechanics = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await fetch("http://localhost:5000/api/auth/mechanics", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const data = await res.json();
+      setMechanics(data);
+    } catch (err) {
+      console.error("Error fetching mechanics:", err);
+    }
+  };
+
+
   useEffect(() => {
     fetchComplaints();
-
-    // const interval = setInterval(() => {
-    //   fetchComplaints();
-    // }, 5000);
-
-    // return () => clearInterval(interval);
+    fetchMechanics();
   }, []);
 
-  // 🔄 Status update
+
   const handleStatusChange = async (id, newStatus) => {
     try {
       await fetch(`http://localhost:5000/api/complaints/${id}/status`, {
@@ -87,6 +100,26 @@ export default function AdminPage() {
     }
   };
 
+  const assignMechanic = async (complaintId, mechanicId) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      await fetch(`http://localhost:5000/api/complaints/${complaintId}/assign`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ mechanicId })
+      });
+
+      message.success("Mechanic assigned 🔥");
+      fetchComplaints();
+    } catch (err) {
+      message.error("Assignment failed ❌");
+    }
+  };
+
   const filteredComplaints = complaints.filter((item) => {
     const statusMatch =
       statusFilter === "all" || item.status === statusFilter;
@@ -99,17 +132,17 @@ export default function AdminPage() {
 
   const statusIndex = {
     pending: 0,
-    seen: 1,
-    scheduled: 2,
+    assigned: 1,
+    "in-progress": 2,
     completed: 3
   }[selectedComplaint?.status] ?? 0;
 
-  // 📊 Stats
+
   const total = complaints.length;
   const pending = complaints.filter((c) => c.status === "pending").length;
   const completed = complaints.filter((c) => c.status === "completed").length;
 
-  // 📋 Table columns
+
   const columns = [
     {
       title: "Complaint ID",
@@ -141,8 +174,8 @@ export default function AdminPage() {
       render: (status) => {
         const styles = {
           pending: "bg-red-100 text-red-600",
-          seen: "bg-yellow-100 text-yellow-600",
-          scheduled: "bg-purple-100 text-purple-600",
+          assigned: "bg-blue-100 text-blue-600",
+          "in-progress": "bg-purple-100 text-purple-600",
           completed: "bg-green-100 text-green-600",
         };
 
@@ -324,17 +357,34 @@ transition-all duration-300 hover:shadow-lg overflow-hidden">
                   size="small"
                   items={[
                     { title: "Pending" },
-                    { title: "Seen" },
-                    { title: "Scheduled" },
+                    { title: "Assigned" },
+                    { title: "In Progress" },
                     { title: "Completed" }
                   ]}
                 />
               </div>
 
-              {/* ACTIONS */}
               <div className="bg-gray-50 p-4 rounded-xl">
                 <h3 className="text-sm font-semibold text-gray-500 mb-2">Actions</h3>
 
+                {/* 🔧 ASSIGN MECHANIC */}
+                {!selectedComplaint.fullData.assignedTo && (
+                  <Select
+                    placeholder="Assign Mechanic"
+                    className="w-full mb-3"
+                    onChange={(value) =>
+                      assignMechanic(selectedComplaint.key, value)
+                    }
+                  >
+                    {mechanics.map((m) => (
+                      <Option key={m._id} value={m._id}>
+                        {m.fullName}
+                      </Option>
+                    ))}
+                  </Select>
+                )}
+
+                {/* 🔄 UPDATE STATUS */}
                 <Select
                   placeholder="Update status"
                   className="w-full"
@@ -342,9 +392,8 @@ transition-all duration-300 hover:shadow-lg overflow-hidden">
                     handleStatusChange(selectedComplaint.key, value)
                   }
                 >
-                  <Option value="pending">Pending</Option>
-                  <Option value="seen">Seen</Option>
-                  <Option value="scheduled">Scheduled</Option>
+                  <Option value="assigned">Assigned</Option>
+                  <Option value="in-progress">In Progress</Option>
                   <Option value="completed">Completed</Option>
                 </Select>
               </div>

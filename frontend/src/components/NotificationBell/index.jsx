@@ -9,7 +9,7 @@ function NotificationBell() {
 
     if (!user || !user._id) {
         console.error("User not found");
-
+        return null;
     }
 
     const fetchNotifications = async () => {

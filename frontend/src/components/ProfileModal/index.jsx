@@ -42,15 +42,22 @@ export default function ProfileModal({ open, onClose }) {
                 formData.append("photo", file);
             }
 
+            const token = localStorage.getItem("token");
+
             const res = await fetch(
                 `http://localhost:5000/api/auth/update-profile/${user._id}`,
                 {
                     method: "PUT",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    },
                     body: formData
                 }
             );
 
             const data = await res.json();
+
+            console.log("UPDATE RESPONSE:", data);
 
             localStorage.setItem("user", JSON.stringify(data));
 

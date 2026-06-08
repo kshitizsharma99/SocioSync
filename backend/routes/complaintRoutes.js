@@ -5,16 +5,22 @@ const Notification = require("../models/Notification");
 const upload = require("../middleware/upload");
 const auth = require("../middleware/auth");
 
+
+
 router.get("/", auth, async (req, res) => {
     try {
         let complaints;
 
         if (req.user.role === "admin") {
-            // 👑 Admin sees everything
             complaints = await Complaint.find()
                 .populate("user", "fullName email");
-        } else {
-            // 👤 User sees only their complaints
+        }
+        else if (req.user.role === "mechanic") {
+            complaints = await Complaint.find({
+                assignedTo: req.user.id
+            }).populate("user", "fullName email");
+        }
+        else {
             complaints = await Complaint.find({
                 user: req.user.id
             });
@@ -23,20 +29,81 @@ router.get("/", auth, async (req, res) => {
         res.json(complaints);
 
     } catch (error) {
-        res.status(500).json({ message: "Server error" });
+        console.error(error);
+        res.status(500).json({ message: error.message });
     }
 });
 
+
+// 🔥 ASSIGN MECHANIC (ADMIN ONLY)
+router.put("/:id/assign", auth, async (req, res) => {
+    try {
+        if (req.user.role !== "admin") {
+            return res.status(403).json({ message: "Only admin can assign" });
+        }
+
+        const { mechanicId } = req.body;
+
+        const complaint = await Complaint.findByIdAndUpdate(
+            req.params.id,
+            {
+                assignedTo: mechanicId,
+                assignedAt: new Date(),
+                status: "assigned"
+            },
+            { returnDocument: "after" } // ✅ FIXED
+        );
+
+        if (!complaint) {
+            return res.status(404).json({ message: "Complaint not found" });
+        }
+
+        // 🔔 notify mechanic
+        await Notification.create({
+            userId: mechanicId,
+            message: "You have been assigned a new complaint",
+            type: "assignment"
+        });
+
+        res.json(complaint);
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: err.message });
+    }
+});
+
+
+// 🔥 UPDATE STATUS (ADMIN + MECHANIC)
 router.put("/:id/status", auth, async (req, res) => {
     try {
-        // 🔒 Only admin allowed
-        if (req.user.role !== "admin") {
+        const complaint = await Complaint.findById(req.params.id);
+
+        if (!complaint) {
+            return res.status(404).json({ message: "Complaint not found" });
+        }
+
+        // 👑 Admin can update anything
+        if (req.user.role === "admin") {
+            // allowed
+        }
+
+        // 🛠 Mechanic only for assigned job
+        else if (req.user.role === "mechanic") {
+            if (!complaint.assignedTo || complaint.assignedTo.toString() !== req.user.id) {
+                return res.status(403).json({ message: "Not your assigned job" });
+            }
+        }
+
+        // ❌ others blocked
+        else {
             return res.status(403).json({ message: "Access denied" });
         }
 
         const { status } = req.body;
 
-        const allowedStatus = ["pending", "seen", "scheduled", "completed"];
+        const allowedStatus = ["pending", "assigned", "in-progress", "completed"];
+
         if (!status || !allowedStatus.includes(status)) {
             return res.status(400).json({ message: "Invalid status value" });
         }
@@ -44,13 +111,10 @@ router.put("/:id/status", auth, async (req, res) => {
         const updatedComplaint = await Complaint.findByIdAndUpdate(
             req.params.id,
             { status },
-            { new: true, runValidators: true }
+            { returnDocument: "after" } // ✅ FIXED
         );
 
-        if (!updatedComplaint) {
-            return res.status(404).json({ message: "Complaint not found" });
-        }
-
+        // 🔔 notify resident
         await Notification.create({
             userId: updatedComplaint.user,
             message: `Your complaint is now ${status}`,
@@ -65,30 +129,20 @@ router.put("/:id/status", auth, async (req, res) => {
     }
 });
 
-// router.get("/my/:userId", async (req, res) => {
-//     try {
-//         const complaints = await Complaint.find({ user: req.params.userId });
-//         res.json(complaints);
-//     } catch (error) {
-//         res.status(500).json({ message: "Server error" });
-//     }
-// });
 
+// 🔥 CREATE COMPLAINT
 router.post("/", auth, upload.single("photo"), async (req, res) => {
     try {
-        // ✅ Get uploaded file
         const photo = req.file ? req.file.filename : null;
 
-        // ✅ Create complaint securely
         const complaint = new Complaint({
             ...req.body,
-            user: req.user.id,   // 🔥 backend controls user
+            user: req.user.id,
             photo
         });
 
         await complaint.save();
 
-        // 🔔 Notify admin (optional improvement later)
         await Notification.create({
             userId: req.user.id,
             message: "New complaint submitted",

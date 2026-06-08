@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function AuthPage({ setUser }) {
+  const [staffRole, setStaffRole] = useState(null);
   const [isLogin, setIsLogin] = useState(true);
   const [role, setRole] = useState(null);
   const navigate = useNavigate();
@@ -36,9 +37,15 @@ function AuthPage({ setUser }) {
         }
       }
 
-      if (role === "admin") {
+      if (staffRole === "admin") {
         if (!formData.fullName || !formData.adminCode) {
           alert("Please fill admin details");
+          return;
+        }
+      }
+      if (staffRole === "mechanic") {
+        if (!formData.fullName) {
+          alert("Please fill mechanic details");
           return;
         }
       }
@@ -58,7 +65,7 @@ function AuthPage({ setUser }) {
             fullName: formData.fullName,
             email: formData.email,
             password: formData.password,
-            role: role,
+            role: role === "staff" ? staffRole : role,
             houseNo: formData.flatNo,
             buildingName: formData.buildingName,
             adminCode: formData.adminCode
@@ -90,11 +97,18 @@ function AuthPage({ setUser }) {
           body: JSON.stringify({
             email: formData.email,
             password: formData.password,
-            rememberMe
+            rememberMe,
+            roleGroup: role === "resident" ? "resident" : "staff"
           })
         });
 
         const data = await response.json();
+
+        if (!response.ok) {
+          alert(data.message);
+          return;
+        }
+
 
         if (response.ok) {
           localStorage.setItem("token", data.token);
@@ -112,7 +126,7 @@ function AuthPage({ setUser }) {
         }
 
       } catch (error) {
-        alert("Server error");
+        alert(error.message);
       }
     }
   };
@@ -165,10 +179,10 @@ function AuthPage({ setUser }) {
               </button>
 
               <button
-                onClick={() => setRole("admin")}
+                onClick={() => setRole("staff")}
                 className="w-60 border py-3 rounded-xl font-medium hover:bg-gray-100 transition"
               >
-                Continue as Admin
+                Continue as Staff
               </button>
 
             </div>
@@ -178,7 +192,10 @@ function AuthPage({ setUser }) {
             <div>
 
               <button
-                onClick={() => setRole(null)}
+                onClick={() => {
+                  setRole(null);
+                  setStaffRole(null);
+                }}
                 className="mb-6 text-sm text-gray-500 hover:underline"
               >
                 ← Back
@@ -187,13 +204,13 @@ function AuthPage({ setUser }) {
               <div className="mb-8 text-center md:text-left">
 
                 <p className="text-sm text-gray-400 mb-2">
-                  {role === "admin" ? "Admin Panel" : "Resident Portal"}
+                  {role === "resident" ? "Resident Portal" : "Staff Portal"}
                 </p>
 
                 <h2 className="text-4xl font-serif font-semibold text-gray-900">
                   {isLogin
-                    ? `Welcome Back ${role === "admin" ? "Admin" : ""}`
-                    : `Create ${role === "admin" ? "Admin" : "Resident"} Account`}
+                    ? `Welcome Back ${role === "resident" ? "Resident" : "Staff"}`
+                    : `Create ${role === "resident" ? "Resident" : "Staff"} Account`}
                 </h2>
 
                 <p className="text-gray-500 mt-2">
@@ -204,99 +221,128 @@ function AuthPage({ setUser }) {
 
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-5">
+              {role === "staff" && !isLogin && staffRole === null && (
+                <div className="flex flex-col items-center space-y-4 mb-6">
+                  <button
+                    onClick={() => setStaffRole("admin")}
+                    className="w-full border py-3 rounded-xl hover:bg-gray-100"
+                  >
+                    Sign up as Admin
+                  </button>
 
-                {!isLogin && (
-                  <>
-                    <input
-                      type="text"
-                      name="fullName"
-                      placeholder="Full Name"
-                      onChange={handleChange}
-                      className="w-full px-5 py-3 bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
-                    />
+                  <button
+                    onClick={() => setStaffRole("mechanic")}
+                    className="w-full border py-3 rounded-xl hover:bg-gray-100"
+                  >
+                    Sign up as Mechanic
+                  </button>
+                </div>
+              )}
+              {!(role === "staff" && !isLogin && staffRole === null) && (
+                <form onSubmit={handleSubmit} className="space-y-5">
 
-                    {role === "resident" && (
-                      <>
-                        <input
-                          type="text"
-                          name="flatNo"
-                          placeholder="House / Flat No."
-                          onChange={handleChange}
-                          className="w-full px-5 py-3 bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
-                        />
-
-                        <input
-                          type="text"
-                          name="buildingName"
-                          placeholder="Building Name"
-                          onChange={handleChange}
-                          className="w-full px-5 py-3 bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
-                        />
-                      </>
-                    )}
-
-                    {role === "admin" && (
+                  {!isLogin && (
+                    <>
                       <input
                         type="text"
-                        name="adminCode"
-                        placeholder="Admin Code"
+                        name="fullName"
+                        placeholder="Full Name"
                         onChange={handleChange}
                         className="w-full px-5 py-3 bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
                       />
-                    )}
-                  </>
-                )}
 
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  onChange={handleChange}
-                  className="w-full px-5 py-3 bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
-                />
+                      {role === "resident" && (
+                        <>
+                          <input
+                            type="text"
+                            name="flatNo"
+                            placeholder="House / Flat No."
+                            onChange={handleChange}
+                            className="w-full px-5 py-3 bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
+                          />
 
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  onChange={handleChange}
-                  className="w-full px-5 py-3 bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
-                />
+                          <input
+                            type="text"
+                            name="buildingName"
+                            placeholder="Building Name"
+                            onChange={handleChange}
+                            className="w-full px-5 py-3 bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
+                          />
+                        </>
+                      )}
 
-                {!isLogin && (
+                      {staffRole === "admin" && (
+                        <input
+                          type="text"
+                          name="adminCode"
+                          placeholder="Admin Code"
+                          onChange={handleChange}
+                          className="w-full px-5 py-3 bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
+                        />
+                      )}
+
+                      {staffRole === "mechanic" && (
+                        <input
+                          type="text"
+                          name="adminCode"
+                          placeholder="Mechanic Code"
+                          onChange={handleChange}
+                          className="w-full px-5 py-3 bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
+                        />
+                      )}
+                    </>
+                  )}
+
                   <input
-                    type="password"
-                    name="confirmPassword"
-                    placeholder="Confirm Password"
+                    type="email"
+                    name="email"
+                    placeholder="Email"
                     onChange={handleChange}
                     className="w-full px-5 py-3 bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
                   />
-                )}
 
-                {isLogin && (
-                  <div className="flex justify-between text-sm text-gray-500">
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        onChange={(e) => setRememberMe(e.target.checked)}
-                      />
-                      Remember me
-                    </label>
-                    <button type="button" className="hover:underline">
-                      Forgot Password?
-                    </button>
-                  </div>
-                )}
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    onChange={handleChange}
+                    className="w-full px-5 py-3 bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
+                  />
 
-                <button
-                  type="submit"
-                  className="w-full bg-black text-white py-3 rounded-xl font-semibold hover:opacity-90 transition"
-                >
-                  {isLogin ? "Sign In" : "Create Account"}
-                </button>
+                  {!isLogin && (
+                    <input
+                      type="password"
+                      name="confirmPassword"
+                      placeholder="Confirm Password"
+                      onChange={handleChange}
+                      className="w-full px-5 py-3 bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
+                    />
+                  )}
 
-              </form>
+                  {isLogin && (
+                    <div className="flex justify-between text-sm text-gray-500">
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          onChange={(e) => setRememberMe(e.target.checked)}
+                        />
+                        Remember me
+                      </label>
+                      <button type="button" className="hover:underline">
+                        Forgot Password?
+                      </button>
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    className="w-full bg-black text-white py-3 rounded-xl font-semibold hover:opacity-90 transition"
+                  >
+                    {isLogin ? "Sign In" : "Create Account"}
+                  </button>
+
+                </form>
+              )}
 
               <p className="text-center mt-8 text-gray-500">
 
@@ -305,7 +351,10 @@ function AuthPage({ setUser }) {
                   : "Already have an account?"}
 
                 <button
-                  onClick={() => setIsLogin(!isLogin)}
+                  onClick={() => {
+                    setIsLogin(!isLogin);
+                    setStaffRole(null);
+                  }}
                   className="font-semibold ml-2 text-black hover:underline"
                 >
                   {isLogin ? "Sign Up" : "Login"}

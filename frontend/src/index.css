@@ -10,24 +10,22 @@ body {
   background-size: cover;
 }
 
-/* ========================= */
-/* Custom Scrollbar */
-/* ========================= */
+
 
 .custom-scrollbar {
   scrollbar-width: thin;
-  /* Firefox */
+
   scrollbar-color: rgba(0, 0, 0, 0.4) transparent;
 }
 
-/* Chrome, Edge, Safari */
+
 .custom-scrollbar::-webkit-scrollbar {
   width: 8px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
-  /* removes white track */
+
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {

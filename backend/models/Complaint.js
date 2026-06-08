@@ -37,15 +37,23 @@ const complaintSchema = new mongoose.Schema({
         enum: ["normal", "emergency"],
         default: "normal"
     },
+
     status: {
         type: String,
-        enum: ["pending", "seen", "scheduled", "completed"],
+        enum: ["pending", "assigned", "in-progress", "completed"],
         default: "pending"
     },
 
-    // ✅ ADD THIS FIELD
+    assignedTo: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
+    assignedAt: {
+        type: Date
+    },
+
     photo: {
-        type: String   // will store filename like "171234567-image.jpg"
+        type: String
     }
 
 }, { timestamps: true });

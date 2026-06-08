@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ["resident", "admin"],
+        enum: ["resident", "admin", "mechanic"],
         required: true
     },
     houseNo: {
@@ -26,8 +26,8 @@ const userSchema = new mongoose.Schema({
         type: String
     },
     photo: {
-    type: String   // will store filename
-}
+        type: String
+    }
 }, { timestamps: true });
 
 module.exports = mongoose.model("User", userSchema);

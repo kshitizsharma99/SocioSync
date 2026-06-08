@@ -4,6 +4,7 @@ import AuthPage from "./pages/authPage/AuthPage";
 import ServicePage from "./pages/servicePage/servicePage";
 import Layout from "./components/layout/Layout";
 import AdminPage from "./pages/adminPage";
+import MechanicDashboard from "./pages/mechanicDashboard";
 import { useState } from "react";
 
 function App() {
@@ -17,14 +18,16 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/auth" element={<AuthPage setUser={setUser} />} />
           {user ? (
-          user.role === "admin" ? (
-            <Route path="/services" element={<AdminPage />} />
+            user.role === "admin" ? (
+              <Route path="/services" element={<AdminPage />} />
+            ) : user.role === "mechanic" ? (
+              <Route path="/services" element={<MechanicDashboard />} />
+            ) : (
+              <Route path="/services" element={<ServicePage />} />
+            )
           ) : (
             <Route path="/services" element={<ServicePage />} />
-          )
-        ) : (
-          <Route path="/services" element={<ServicePage />} />
-        )}
+          )}
         </Routes>
       </Layout>
     </BrowserRouter>
