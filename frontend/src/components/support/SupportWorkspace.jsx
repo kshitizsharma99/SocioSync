@@ -19,11 +19,11 @@ function SupportWorkspace() {
 
     const fetchComplaints = async () => {
         try {
-            const token = localStorage.getItem("token");   // 👈 get token
+            const token = localStorage.getItem("token");
 
             const res = await axios.get("http://localhost:5000/api/complaints", {
                 headers: {
-                    Authorization: `Bearer ${token}`   // 👈 SEND TOKEN
+                    Authorization: `Bearer ${token}`
                 }
             });
 

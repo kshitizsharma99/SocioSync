@@ -73,7 +73,7 @@ function ComplaintSidebar({
 
 
 
-            {role === "admin" && (
+            {role === "mechanic" && (
                 <div className="grid grid-cols-2 gap-3">
                     <Card size="small">
                         <p className="text-xs text-gray-500">Total</p>

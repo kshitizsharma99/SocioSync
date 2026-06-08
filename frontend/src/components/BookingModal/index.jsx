@@ -49,14 +49,19 @@ function BookingModal({ open, service, onClose }) {
       );
       formData.append("urgency", values.urgency);
 
-      // ✅ ADD IMAGE HERE
+
       if (values.photo && values.photo.length > 0) {
         formData.append("photo", values.photo[0].originFileObj);
       }
 
+      const token = localStorage.getItem("token");
+
       const response = await fetch("http://localhost:5000/api/complaints", {
         method: "POST",
-        body: formData, // ❗ no headers here
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        body: formData,
       });
 
       const data = await response.json();

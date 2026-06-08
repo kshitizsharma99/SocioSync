@@ -18,26 +18,43 @@ function Navbar({ onOpenSupport }) {
         <Image preview={false} src={bannerImg} height={45} width={45} />
 
         <NavLink to="/">
-          <Button type="text" className="!text-base !font-medium">
-            Home
-          </Button>
+          {({ isActive }) => (
+            <Button
+              type="text"
+              className={`!text-base !font-medium ${isActive
+                ? "!text-[#FF6B6B] !font-semibold"
+                : ""
+                }`}
+            >
+              Home
+            </Button>
+          )}
         </NavLink>
 
         <NavLink to="/services">
-          <Button type="text" className="!text-base !font-medium">
-            Services
-          </Button>
+          {({ isActive }) => (
+            <Button
+              type="text"
+              className={`!text-base !font-medium ${isActive
+                ? "!text-[#FF6B6B] !font-semibold"
+                : ""
+                }`}
+            >
+              Services
+            </Button>
+          )}
         </NavLink>
 
-        {user && (
-          <Button
-            type="text"
-            onClick={onOpenSupport}
-            className="!text-base !font-medium"
-          >
-            Support
-          </Button>
-        )}
+        {user &&
+          (user.role === "resident" || user.role === "mechanic") && (
+            <Button
+              type="text"
+              onClick={onOpenSupport}
+              className="!text-base !font-medium"
+            >
+              Support
+            </Button>
+          )}
       </div>
 
       <div className="flex items-center gap-5">

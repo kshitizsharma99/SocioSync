@@ -35,7 +35,7 @@ router.get("/", auth, async (req, res) => {
 });
 
 
-// 🔥 ASSIGN MECHANIC (ADMIN ONLY)
+
 router.put("/:id/assign", auth, async (req, res) => {
     try {
         if (req.user.role !== "admin") {
@@ -51,7 +51,7 @@ router.put("/:id/assign", auth, async (req, res) => {
                 assignedAt: new Date(),
                 status: "assigned"
             },
-            { returnDocument: "after" } // ✅ FIXED
+            { returnDocument: "after" }
         );
 
         if (!complaint) {
@@ -74,7 +74,7 @@ router.put("/:id/assign", auth, async (req, res) => {
 });
 
 
-// 🔥 UPDATE STATUS (ADMIN + MECHANIC)
+
 router.put("/:id/status", auth, async (req, res) => {
     try {
         const complaint = await Complaint.findById(req.params.id);
@@ -83,19 +83,17 @@ router.put("/:id/status", auth, async (req, res) => {
             return res.status(404).json({ message: "Complaint not found" });
         }
 
-        // 👑 Admin can update anything
         if (req.user.role === "admin") {
             // allowed
         }
 
-        // 🛠 Mechanic only for assigned job
         else if (req.user.role === "mechanic") {
             if (!complaint.assignedTo || complaint.assignedTo.toString() !== req.user.id) {
                 return res.status(403).json({ message: "Not your assigned job" });
             }
         }
 
-        // ❌ others blocked
+
         else {
             return res.status(403).json({ message: "Access denied" });
         }
@@ -111,10 +109,9 @@ router.put("/:id/status", auth, async (req, res) => {
         const updatedComplaint = await Complaint.findByIdAndUpdate(
             req.params.id,
             { status },
-            { returnDocument: "after" } // ✅ FIXED
+            { returnDocument: "after" }
         );
 
-        // 🔔 notify resident
         await Notification.create({
             userId: updatedComplaint.user,
             message: `Your complaint is now ${status}`,
@@ -130,7 +127,7 @@ router.put("/:id/status", auth, async (req, res) => {
 });
 
 
-// 🔥 CREATE COMPLAINT
+
 router.post("/", auth, upload.single("photo"), async (req, res) => {
     try {
         const photo = req.file ? req.file.filename : null;
