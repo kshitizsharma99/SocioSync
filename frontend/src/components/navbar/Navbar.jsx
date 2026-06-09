@@ -57,7 +57,9 @@ function Navbar({ onOpenSupport }) {
                 onClick={onOpenSupport}
                 className="!text-base !font-medium"
               >
-                Support
+                {user.role === "resident"
+                  ? "My Complaints"
+                  : "Dashboard"}
               </Button>
             )}
         </div>
@@ -135,7 +137,9 @@ function Navbar({ onOpenSupport }) {
                   }}
                   className="px-4 py-3 rounded-xl hover:bg-white/40 transition"
                 >
-                  Support
+                  {user.role === "resident"
+                    ? "My Complaints"
+                    : "Dashboard"}
                 </button>
               )}
 
