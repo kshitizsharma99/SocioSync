@@ -101,24 +101,28 @@ function SupportWorkspace() {
         <div className="h-[75vh] overflow-y-auto custom-scrollbar p-2">
             <div className="flex flex-col lg:flex-row gap-6 h-full">
 
-                <ComplaintSidebar
-                    complaints={filteredComplaints}
-                    selectedComplaint={selectedComplaint}
-                    setSelectedComplaint={setSelectedComplaint}
-                    role={role}
-                    statusFilter={statusFilter}
-                    setStatusFilter={setStatusFilter}
-                    dateFilter={dateFilter}
-                    setDateFilter={setDateFilter}
-                />
+                <div className="w-full lg:w-80 flex-shrink-0">
+                    <ComplaintSidebar
+                        complaints={filteredComplaints}
+                        selectedComplaint={selectedComplaint}
+                        setSelectedComplaint={setSelectedComplaint}
+                        role={role}
+                        statusFilter={statusFilter}
+                        setStatusFilter={setStatusFilter}
+                        dateFilter={dateFilter}
+                        setDateFilter={setDateFilter}
+                    />
+                </div>
 
-                <ComplaintOverview
-                    complaint={selectedComplaint}
-                    role={role}
-                    statusSummary={statusSummary}
-                    averageRating={averageRating}
-                    totalReviews={totalReviews}
-                />
+                <div className="flex-1 min-w-0 ">
+                    <ComplaintOverview
+                        complaint={selectedComplaint}
+                        role={role}
+                        statusSummary={statusSummary}
+                        averageRating={averageRating}
+                        totalReviews={totalReviews}
+                    />
+                </div>
 
             </div>
         </div>

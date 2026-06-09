@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { message } from "antd";
 
 function AuthPage({ setUser }) {
   const [staffRole, setStaffRole] = useState(null);
@@ -32,26 +33,26 @@ function AuthPage({ setUser }) {
 
       if (role === "resident") {
         if (!formData.fullName || !formData.flatNo || !formData.buildingName) {
-          alert("Please fill all resident details");
+          message.error("Please fill all resident details");
           return;
         }
       }
 
       if (staffRole === "admin") {
         if (!formData.fullName || !formData.adminCode) {
-          alert("Please fill admin details");
+          message.error("Please fill admin details");
           return;
         }
       }
       if (staffRole === "mechanic") {
         if (!formData.fullName) {
-          alert("Please fill mechanic details");
+          message.error("Please fill mechanic details");
           return;
         }
       }
 
       if (formData.password !== formData.confirmPassword) {
-        alert("Passwords do not match");
+        message.error("Passwords do not match");
         return;
       }
 
@@ -75,14 +76,14 @@ function AuthPage({ setUser }) {
         const data = await response.json();
 
         if (response.ok) {
-          alert("Signup successful. Please login.");
+          message.success("Signup successful. Please login.");
           setIsLogin(true);
         } else {
-          alert(data.message);
+          message.error(data.message);
         }
 
       } catch (error) {
-        alert("Server error");
+        message.error("Server error");
       }
 
     } else {
@@ -105,7 +106,7 @@ function AuthPage({ setUser }) {
         const data = await response.json();
 
         if (!response.ok) {
-          alert(data.message);
+          message.error(data.message);
           return;
         }
 
@@ -126,7 +127,7 @@ function AuthPage({ setUser }) {
         }
 
       } catch (error) {
-        alert(error.message);
+        message.error(error.message);
       }
     }
   };

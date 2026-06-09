@@ -76,7 +76,7 @@ function ComplaintSidebar({
             )}
 
 
-            <div className="flex-1 overflow-y-auto hide-scrollbar space-y-3">
+            <div className="max-h-64 lg:max-h-none lg:flex-1 overflow-y-auto hide-scrollbar space-y-3">
                 {complaints.map((complaint) => (
                     <div
                         key={complaint._id}

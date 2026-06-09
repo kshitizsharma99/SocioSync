@@ -139,7 +139,7 @@ function MechanicDashboard() {
     return (
         <div className="flex flex-col lg:flex-row gap-4 p-4 md:p-6 min-h-screen">
 
-            {/* LEFT */}
+
             <div className="w-full lg:w-2/3 flex flex-col gap-4">
 
                 <Row gutter={[16, 16]}>
@@ -240,7 +240,6 @@ function MechanicDashboard() {
 
             </div>
 
-            {/* RIGHT */}
             <div className="w-full lg:w-1/3">
                 <Card>
                     {selectedComplaint ? (

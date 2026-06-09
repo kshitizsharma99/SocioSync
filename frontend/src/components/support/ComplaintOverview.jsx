@@ -59,7 +59,9 @@ function ComplaintOverview({ complaint, role, statusSummary, averageRating, tota
 
             message.success("Rating submitted successfully!");
 
-            window.location.reload();
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
 
         } catch (error) {
             console.error(error);
@@ -75,7 +77,7 @@ function ComplaintOverview({ complaint, role, statusSummary, averageRating, tota
             {role === "mechanic" && (
                 <>
                     <h2 className="text-xl font-semibold mb-4">
-                        Dashboard Overview
+                        Dashboard Overview :
                     </h2>
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
 
@@ -110,7 +112,7 @@ function ComplaintOverview({ complaint, role, statusSummary, averageRating, tota
                     </div>
 
                     <div className="bg-white rounded-xl p-4 border mb-6">
-                        <p className="text-gray-500 text-sm">
+                        <p className="text-gray-500 text-sm mb-2">
                             Average Rating
                         </p>
 
@@ -121,7 +123,7 @@ function ComplaintOverview({ complaint, role, statusSummary, averageRating, tota
                         />
 
                         <p className="text-lg font-semibold mt-2">
-                            {averageRating.toFixed(1)} / 5
+                            {averageRating.toFixed(1)} / 5.0
                         </p>
 
                         <p className="text-gray-500 text-sm">
@@ -133,13 +135,13 @@ function ComplaintOverview({ complaint, role, statusSummary, averageRating, tota
                 </>
             )}
 
-            <h2 className="text-xl font-semibold mb-4">
-                Complaint Details
+            <h2 className="text-xl font-semibold mb-2">
+                Complaint Details :
             </h2>
             <div className="flex justify-between items-center mb-6">
 
                 <div>
-                    <h2 className="text-xl font-semibold">
+                    <h2 className="text-xl font-semibold pb-1">
                         {complaint.serviceTitle}
                     </h2>
                     <p className="text-gray-500 text-sm">
@@ -159,6 +161,7 @@ function ComplaintOverview({ complaint, role, statusSummary, averageRating, tota
             </div>
 
             <Steps
+                direction={window.innerWidth < 729 ? "vertical" : "horizontal"}
                 current={statusIndex}
                 items={[
                     { title: "Pending" },
@@ -215,7 +218,6 @@ function ComplaintOverview({ complaint, role, statusSummary, averageRating, tota
             {complaint.status === "completed" && (
                 <>
 
-                    {/* Resident can rate */}
                     {role === "resident" && !complaint.rating && (
 
 
@@ -248,11 +250,10 @@ function ComplaintOverview({ complaint, role, statusSummary, averageRating, tota
                         </div>
                     )}
 
-                    {/* Show submitted review */}
                     {complaint.rating && (
 
                         <div className="space-y-3 mt-2">
-                            <h3 className="font-semibold text-lg mb-1">
+                            <h3 className="font-semibold text-lg mb-2">
                                 Customer Feedback
                             </h3>
 
@@ -261,7 +262,7 @@ function ComplaintOverview({ complaint, role, statusSummary, averageRating, tota
                                 value={complaint.rating}
                             />
 
-                            <div className="bg-gray-50 rounded-lg p-4 mt-2 max-h-40 overflow-y-auto">
+                            <div className="bg-gray-50 rounded-lg p-4 mt-3 max-h-40 overflow-y-auto">
                                 {complaint.review || "No comments"}
                             </div>
                         </div>

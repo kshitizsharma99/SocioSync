@@ -323,7 +323,7 @@ transition-all duration-300 hover:shadow-lg overflow-hidden">
           {selectedComplaint ? (
             <div className="space-y-5">
 
-              {/* HEADER */}
+
               <div className="border-b pb-3">
                 <h2 className="text-xl font-semibold text-gray-800">
                   Complaint #{selectedComplaint.id}
@@ -333,7 +333,7 @@ transition-all duration-300 hover:shadow-lg overflow-hidden">
                 </p>
               </div>
 
-              {/* USER INFO */}
+
               <div className="bg-gray-50 p-4 rounded-xl">
                 <h3 className="text-sm font-semibold text-gray-500 mb-2">User Info</h3>
                 <div className="space-y-1 text-sm">
@@ -343,7 +343,7 @@ transition-all duration-300 hover:shadow-lg overflow-hidden">
                 </div>
               </div>
 
-              {/* SERVICE INFO */}
+
               <div className="bg-gray-50 p-4 rounded-xl">
                 <h3 className="text-sm font-semibold text-gray-500 mb-2">Service Details</h3>
                 <div className="space-y-1 text-sm">
@@ -360,7 +360,6 @@ transition-all duration-300 hover:shadow-lg overflow-hidden">
                 </div>
               </div>
 
-              {/* STATUS */}
               <div className="bg-gray-50 p-4 rounded-xl">
                 <h3 className="text-sm font-semibold text-gray-500 mb-2">Progress</h3>
 

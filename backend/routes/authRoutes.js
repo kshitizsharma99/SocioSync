@@ -108,7 +108,7 @@ router.post("/login", async (req, res) => {
 
         res.status(200).json({
             message: "Login successful",
-            token,   // 👈 NEW
+            token,
             user
         });
 
@@ -130,7 +130,6 @@ router.put("/update-profile/:id", auth, upload.single("photo"), async (req, res)
             description: req.body.description,
         };
 
-        // ✅ if image uploaded
         if (req.file) {
             updates.photo = req.file.filename;
         }
