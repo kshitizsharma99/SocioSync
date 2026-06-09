@@ -1,10 +1,24 @@
-import { Card, Tag, Steps, Divider } from "antd";
+import {
+    Tag,
+    Steps,
+    Divider,
+    Rate,
+    Input,
+    Button,
+    message
+} from "antd";
 import axios from "axios";
+import { useState } from "react";
 
-function ComplaintOverview({ complaint, role }) {
+
+
+function ComplaintOverview({ complaint, role, statusSummary, averageRating, totalReviews }) {
     if (!complaint) {
         return <div className="flex-1">Select a complaint</div>;
     }
+
+    const [rating, setRating] = useState(5);
+    const [review, setReview] = useState("");
 
     const statusIndex = {
         pending: 0,
@@ -26,10 +40,104 @@ function ComplaintOverview({ complaint, role }) {
         }
     };
 
-    return (
-        <div className="flex-1 bg-rgba(255, 255, 255, 0.64) rounded-2xl border border-gray-100 shadow-sm p-6">
+    const submitRating = async () => {
+        try {
+            const token = localStorage.getItem("token");
 
+            await axios.put(
+                `http://localhost:5000/api/complaints/${complaint._id}/rate`,
+                {
+                    rating,
+                    review
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            message.success("Rating submitted successfully!");
+
+            window.location.reload();
+
+        } catch (error) {
+            console.error(error);
+            message.error("Failed to submit rating");
+        }
+    };
+
+    console.log("Complaint data:", complaint);
+
+    return (
+        <div className="flex-1 bg-rgba(255, 255, 255, 0.64) rounded-2xl border border-gray-100 shadow-sm p-6 overflow-y-auto hide-scrollbar">
+
+            {role === "mechanic" && (
+                <>
+                    <h2 className="text-xl font-semibold mb-4">
+                        Dashboard Overview
+                    </h2>
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+
+                        <div className="bg-white rounded-xl p-4 border">
+                            <p className="text-gray-500 text-sm">Total</p>
+                            <p className="text-2xl font-semibold">
+                                {statusSummary.total}
+                            </p>
+                        </div>
+
+                        <div className="bg-white rounded-xl p-4 border">
+                            <p className="text-gray-500 text-sm">Assigned</p>
+                            <p className="text-2xl font-semibold text-blue-600">
+                                {statusSummary.assigned}
+                            </p>
+                        </div>
+
+                        <div className="bg-white rounded-xl p-4 border">
+                            <p className="text-gray-500 text-sm">In Progress</p>
+                            <p className="text-2xl font-semibold text-yellow-600">
+                                {statusSummary.inProgress}
+                            </p>
+                        </div>
+
+                        <div className="bg-white rounded-xl p-4 border">
+                            <p className="text-gray-500 text-sm">Completed</p>
+                            <p className="text-2xl font-semibold text-green-600">
+                                {statusSummary.completed}
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div className="bg-white rounded-xl p-4 border mb-6">
+                        <p className="text-gray-500 text-sm">
+                            Average Rating
+                        </p>
+
+                        <Rate
+                            disabled
+                            allowHalf
+                            value={averageRating}
+                        />
+
+                        <p className="text-lg font-semibold mt-2">
+                            {averageRating.toFixed(1)} / 5
+                        </p>
+
+                        <p className="text-gray-500 text-sm">
+                            Based on {totalReviews} reviews
+                        </p>
+                    </div>
+
+                    <Divider />
+                </>
+            )}
+
+            <h2 className="text-xl font-semibold mb-4">
+                Complaint Details
+            </h2>
             <div className="flex justify-between items-center mb-6">
+
                 <div>
                     <h2 className="text-xl font-semibold">
                         {complaint.serviceTitle}
@@ -103,6 +211,63 @@ function ComplaintOverview({ complaint, role }) {
                     {complaint.description}
                 </div>
             </div>
+
+            {complaint.status === "completed" && (
+                <>
+
+                    {/* Resident can rate */}
+                    {role === "resident" && !complaint.rating && (
+
+
+                        <div className="space-y-2 mt-1">
+
+                            <h3 className="font-semibold text-lg">
+                                Rate Service
+                            </h3>
+
+                            <Rate
+                                value={rating}
+                                onChange={setRating}
+                            />
+
+                            <div className="my-2">
+                                <Input.TextArea
+                                    rows={4}
+                                    placeholder="Write your feedback..."
+                                    value={review}
+                                    onChange={(e) => setReview(e.target.value)}
+                                />
+                            </div>
+
+                            <Button
+                                type="primary"
+                                onClick={submitRating}
+                            >
+                                Submit Review
+                            </Button>
+                        </div>
+                    )}
+
+                    {/* Show submitted review */}
+                    {complaint.rating && (
+
+                        <div className="space-y-3 mt-2">
+                            <h3 className="font-semibold text-lg mb-1">
+                                Customer Feedback
+                            </h3>
+
+                            <Rate
+                                disabled
+                                value={complaint.rating}
+                            />
+
+                            <div className="bg-gray-50 rounded-lg p-4 mt-2 max-h-40 overflow-y-auto">
+                                {complaint.review || "No comments"}
+                            </div>
+                        </div>
+                    )}
+                </>
+            )}
 
         </div>
     );

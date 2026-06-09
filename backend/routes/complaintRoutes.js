@@ -114,7 +114,10 @@ router.put("/:id/status", auth, async (req, res) => {
 
         await Notification.create({
             userId: updatedComplaint.user,
-            message: `Your complaint is now ${status}`,
+            message:
+                status === "completed"
+                    ? "Your service request has been completed. Please share your feedback."
+                    : `Your complaint is now ${status}`,
             type: "complaint"
         });
 
@@ -123,6 +126,63 @@ router.put("/:id/status", auth, async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: error.message });
+    }
+});
+
+router.put("/:id/rate", auth, async (req, res) => {
+    try {
+
+        const complaint = await Complaint.findById(req.params.id);
+
+        if (!complaint) {
+            return res.status(404).json({
+                message: "Complaint not found"
+            });
+        }
+
+        if (complaint.rating) {
+            return res.status(400).json({
+                message: "Rating already submitted"
+            });
+        }
+
+        // Only complaint owner can rate
+        if (complaint.user.toString() !== req.user.id) {
+            return res.status(403).json({
+                message: "Access denied"
+            });
+        }
+
+        // Only completed complaints can be rated
+        if (complaint.status !== "completed") {
+            return res.status(400).json({
+                message: "Complaint is not completed yet"
+            });
+        }
+
+        const { rating, review } = req.body;
+
+        if (!rating || rating < 1 || rating > 5) {
+            return res.status(400).json({
+                message: "Rating must be between 1 and 5"
+            });
+        }
+
+        complaint.rating = rating;
+        complaint.review = review;
+        complaint.ratedAt = new Date();
+
+        await complaint.save();
+
+        res.json({
+            message: "Rating submitted successfully"
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: error.message
+        });
     }
 });
 

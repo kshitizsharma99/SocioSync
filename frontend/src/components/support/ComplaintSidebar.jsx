@@ -1,10 +1,14 @@
-import { Select, Card, Tag, Button } from "antd";
+import { Select, Card, Tag, Button, DatePicker } from "antd";
 
 function ComplaintSidebar({
     complaints,
     selectedComplaint,
     setSelectedComplaint,
-    role
+    role,
+    statusFilter,
+    setStatusFilter,
+    dateFilter,
+    setDateFilter
 }) {
 
     const statusColors = {
@@ -14,33 +18,63 @@ function ComplaintSidebar({
         completed: "green"
     };
 
-    const statusSummary = {
-        total: complaints.length,
-        inProgress: complaints.filter(c => c.status === "in-progress").length,
-        assigned: complaints.filter(c => c.status === "assigned").length,
-        completed: complaints.filter(c => c.status === "completed").length
-    };
-
     console.log("Current role:", role);
 
     return (
         <div className="w-full lg:w-80 h-full bg-rgba(255, 255, 255, 0.64) rounded-2xl shadow-sm p-4 border border-gray-100 flex flex-col gap-4">
 
 
-            <Select
-                value={selectedComplaint?._id}
-                placeholder="Select Complaint"
-                className="w-full"
-                onChange={(value) => {
-                    const found = complaints.find(c => c._id === value);
-                    setSelectedComplaint(found);
-                }}
+            {role === "mechanic" && (
+                <Select
+                    placeholder="Filter Status"
+                    value={statusFilter || undefined}
+                    allowClear
+                    className="w-full"
+                    onChange={(value) => setStatusFilter(value || "")}
+                    options={[
+                        {
+                            label: "Assigned",
+                            value: "assigned"
+                        },
+                        {
+                            label: "In Progress",
+                            value: "in-progress"
+                        },
+                        {
+                            label: "Completed",
+                            value: "completed"
+                        }
+                    ]}
+                />
 
-                options={complaints.map(c => ({
-                    label: `${c.serviceTitle}`,
-                    value: c._id
-                }))}
-            />
+            )}
+            {role === "mechanic" && (
+                <DatePicker
+                    className="w-full"
+                    placeholder="Filter Date"
+                    value={dateFilter}
+                    onChange={(date) => setDateFilter(date)}
+                    allowClear
+                />
+            )}
+
+            {role === "resident" && (
+                <Select
+                    value={selectedComplaint?._id}
+                    placeholder="Select Complaint"
+                    className="w-full"
+                    onChange={(value) => {
+                        const found = complaints.find(c => c._id === value);
+                        setSelectedComplaint(found);
+                    }}
+
+                    options={complaints.map(c => ({
+                        label: `${c.serviceTitle}`,
+                        value: c._id
+                    }))}
+                />
+            )}
+
 
             <div className="flex-1 overflow-y-auto hide-scrollbar space-y-3">
                 {complaints.map((complaint) => (
@@ -70,38 +104,6 @@ function ComplaintSidebar({
                     </div>
                 ))}
             </div>
-
-
-
-            {role === "mechanic" && (
-                <div className="grid grid-cols-2 gap-3">
-                    <Card size="small">
-                        <p className="text-xs text-gray-500">Total</p>
-                        <p className="text-lg font-semibold">{statusSummary.total}</p>
-                    </Card>
-
-                    <Card size="small">
-                        <p className="text-xs text-gray-500">In Progress</p>
-                        <p className="text-lg font-semibold text-red-600">
-                            {statusSummary.inProgress}
-                        </p>
-                    </Card>
-
-                    <Card size="small">
-                        <p className="text-xs text-gray-500">Assigned</p>
-                        <p className="text-lg font-semibold text-blue-600">
-                            {statusSummary.assigned}
-                        </p>
-                    </Card>
-
-                    <Card size="small">
-                        <p className="text-xs text-gray-500">Completed</p>
-                        <p className="text-lg font-semibold text-green-600">
-                            {statusSummary.completed}
-                        </p>
-                    </Card>
-                </div>
-            )}
 
             <Button
                 type="primary"

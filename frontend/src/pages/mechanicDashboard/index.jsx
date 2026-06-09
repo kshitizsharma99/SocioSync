@@ -5,6 +5,7 @@ import {
     Table,
     Tag,
     Select,
+    DatePicker,
     Row,
     Col,
     Avatar,
@@ -18,6 +19,8 @@ function MechanicDashboard() {
     const [complaints, setComplaints] = useState([]);
     const [selectedComplaint, setSelectedComplaint] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [statusFilter, setStatusFilter] = useState("all");
+    const [selectedDate, setSelectedDate] = useState(null);
 
 
     const fetchComplaints = async () => {
@@ -89,6 +92,19 @@ function MechanicDashboard() {
     const total = complaints.length;
     const inProgress = complaints.filter(c => c.status === "in-progress").length;
     const completed = complaints.filter(c => c.status === "completed").length;
+
+    const filteredComplaints = complaints.filter((item) => {
+
+        const statusMatch =
+            statusFilter === "all" || item.status === statusFilter;
+
+        const dateMatch =
+            !selectedDate ||
+            new Date(item.fullData.createdAt).toDateString() ===
+            selectedDate.toDate().toDateString();
+
+        return statusMatch && dateMatch;
+    });
 
     const columns = [
         {
@@ -170,6 +186,31 @@ function MechanicDashboard() {
 
                 <Card
                     className="rounded-xl border border-gray-200 shadow-md
+    transition-all duration-300 hover:shadow-lg"
+                >
+                    <div className="flex flex-col md:flex-row gap-3">
+
+                        <Select
+                            value={statusFilter}
+                            onChange={(value) => setStatusFilter(value)}
+                            className="w-full md:w-48"
+                        >
+                            <Option value="all">Status: All</Option>
+                            <Option value="assigned">Assigned</Option>
+                            <Option value="in-progress">In Progress</Option>
+                            <Option value="completed">Completed</Option>
+                        </Select>
+
+                        <DatePicker
+                            className="w-full md:w-48"
+                            onChange={(date) => setSelectedDate(date)}
+                        />
+
+                    </div>
+                </Card>
+
+                <Card
+                    className="rounded-xl border border-gray-200 shadow-md
         transition-all duration-300 hover:shadow-lg overflow-hidden"
                 >
                     {loading ? (
@@ -179,7 +220,7 @@ function MechanicDashboard() {
                     ) : (
                         <Table
                             columns={columns}
-                            dataSource={complaints}
+                            dataSource={filteredComplaints}
                             pagination={{ pageSize: 5 }}
 
                             rowClassName={(record) =>
@@ -284,16 +325,22 @@ function MechanicDashboard() {
                             />
 
                             {/* ACTIONS */}
-                            <Select
-                                className="w-full"
-                                placeholder="Update status"
-                                onChange={(value) =>
-                                    handleStatusChange(selectedComplaint.key, value)
-                                }
-                            >
-                                <Option value="in-progress">Start Work</Option>
-                                <Option value="completed">Mark Completed</Option>
-                            </Select>
+                            {selectedComplaint?.status !== "completed" ? (
+                                <Select
+                                    className="w-full"
+                                    placeholder="Update status"
+                                    onChange={(value) =>
+                                        handleStatusChange(selectedComplaint.key, value)
+                                    }
+                                >
+                                    <Option value="in-progress">Start Work</Option>
+                                    <Option value="completed">Mark Completed</Option>
+                                </Select>
+                            ) : (
+                                <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-green-700 text-center font-medium">
+                                    Complaint Completed ✓
+                                </div>
+                            )}
 
                         </div>
                     ) : (
