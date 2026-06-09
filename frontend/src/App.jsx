@@ -3,7 +3,7 @@ import HomePage from "./pages/homePage/HomePage";
 import AuthPage from "./pages/authPage/AuthPage";
 import ServicePage from "./pages/servicePage/ServicePage";
 import Layout from "./components/layout/Layout";
-import AdminPage from "./pages/adminPage";
+import AdminPage from "./pages/AdminPage";
 import MechanicDashboard from "./pages/mechanicDashboard";
 import { useState } from "react";
 
