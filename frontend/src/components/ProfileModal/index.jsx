@@ -45,7 +45,7 @@ export default function ProfileModal({ open, onClose }) {
             const token = localStorage.getItem("token");
 
             const res = await fetch(
-                `http://localhost:5000/api/auth/update-profile/${user._id}`,
+                `https://sociosync-backend-6dqc.onrender.com/api/auth/update-profile/${user._id}`,
                 {
                     method: "PUT",
                     headers: {
@@ -84,7 +84,7 @@ export default function ProfileModal({ open, onClose }) {
                         src={
                             preview ||
                             (user.photo
-                                ? `http://localhost:5000/uploads/${user.photo}`
+                                ? `https://sociosync-backend-6dqc.onrender.com/uploads/${user.photo}`
                                 : "https://picsum.photos/100")
                         }
                         alt="profile"

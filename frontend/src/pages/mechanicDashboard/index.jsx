@@ -28,7 +28,7 @@ function MechanicDashboard() {
             setLoading(true);
             const token = localStorage.getItem("token");
 
-            const res = await fetch("http://localhost:5000/api/complaints", {
+            const res = await fetch("https://sociosync-backend-6dqc.onrender.com/api/complaints", {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -65,7 +65,7 @@ function MechanicDashboard() {
         try {
             const token = localStorage.getItem("token");
 
-            await fetch(`http://localhost:5000/api/complaints/${id}/status`, {
+            await fetch(`https://sociosync-backend-6dqc.onrender.com/api/complaints/${id}/status`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -301,7 +301,7 @@ function MechanicDashboard() {
                                     </p>
 
                                     <img
-                                        src={`http://localhost:5000/uploads/${selectedComplaint.fullData.photo}`}
+                                        src={`https://sociosync-backend-6dqc.onrender.com/uploads/${selectedComplaint.fullData.photo}`}
                                         alt="Complaint"
                                         className="w-full max-h-64 object-cover rounded-lg border"
                                     />

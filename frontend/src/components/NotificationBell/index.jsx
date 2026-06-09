@@ -19,7 +19,7 @@ function NotificationBell() {
     const fetchNotifications = async () => {
         try {
             const res = await axios.get(
-                `http://localhost:5000/api/notifications/${user._id}`
+                `https://sociosync-backend-6dqc.onrender.com/api/notifications/${user._id}`
             );
             setNotifications(res.data);
         } catch (err) {
@@ -39,7 +39,7 @@ function NotificationBell() {
     const markAsRead = async (id) => {
         try {
             await axios.put(
-                `http://localhost:5000/api/notifications/mark-read/${id}`
+                `https://sociosync-backend-6dqc.onrender.com/api/notifications/mark-read/${id}`
             );
             fetchNotifications();
         } catch (err) {

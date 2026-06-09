@@ -33,7 +33,7 @@ export default function AdminPage() {
       setLoading(true);
       const token = localStorage.getItem("token");
 
-      const res = await fetch("http://localhost:5000/api/complaints", {
+      const res = await fetch("https://sociosync-backend-6dqc.onrender.com/api/complaints", {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -62,7 +62,7 @@ export default function AdminPage() {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await fetch("http://localhost:5000/api/auth/mechanics", {
+      const res = await fetch("https://sociosync-backend-6dqc.onrender.com/api/auth/mechanics", {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -86,7 +86,7 @@ export default function AdminPage() {
     try {
       const token = localStorage.getItem("token");
 
-      await fetch(`http://localhost:5000/api/complaints/${id}/status`, {
+      await fetch(`https://sociosync-backend-6dqc.onrender.com/api/complaints/${id}/status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -113,7 +113,7 @@ export default function AdminPage() {
     try {
       const token = localStorage.getItem("token");
 
-      await fetch(`http://localhost:5000/api/complaints/${complaintId}/assign`, {
+      await fetch(`https://sociosync-backend-6dqc.onrender.com/api/complaints/${complaintId}/assign`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

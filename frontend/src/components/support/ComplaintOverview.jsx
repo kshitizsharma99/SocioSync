@@ -30,7 +30,7 @@ function ComplaintOverview({ complaint, role, statusSummary, averageRating, tota
     const updateStatus = async (newStatus) => {
         try {
             const res = await axios.put(
-                `http://localhost:5000/api/complaints/${complaint._id}/status`,
+                `https://sociosync-backend-6dqc.onrender.com/api/complaints/${complaint._id}/status`,
                 { status: newStatus }
             );
 
@@ -45,7 +45,7 @@ function ComplaintOverview({ complaint, role, statusSummary, averageRating, tota
             const token = localStorage.getItem("token");
 
             await axios.put(
-                `http://localhost:5000/api/complaints/${complaint._id}/rate`,
+                `https://sociosync-backend-6dqc.onrender.com/api/complaints/${complaint._id}/rate`,
                 {
                     rating,
                     review
