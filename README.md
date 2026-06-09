@@ -7,9 +7,11 @@ A full-stack MERN application designed to streamline community service managemen
 ## Table of Contents
 
 - [Features](#features)
+- [Live Demo](#live-demo)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Technologies Used](#technologies-used)
+- [Acknowledgements](#acknowledgements)
 - [License](#license)
 
 ---
@@ -138,6 +140,10 @@ npm run dev
 - Render
 
 ---
+
+## Acknowledgements
+
+Special thanks to Divyam and Aman for their valuable feedback, testing, early-stage ideas, and support during the development of this project.
 
 ## License
 
