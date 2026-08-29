@@ -252,16 +252,6 @@ This allows administrators to keep track of the overall service workflow and ide
 
 ---
 
-## 5.5 Monitor Feedback & Ratings
-
-Administrators can review feedback and ratings submitted by residents.
-
-This provides insight into service quality and mechanic performance.
-
-![Admin Feedback](screenshots/admin-feedback.png)
-
----
-
 # 6. Mechanic Workflow
 
 Mechanics are responsible for handling complaints assigned to them and updating the progress of the service.
