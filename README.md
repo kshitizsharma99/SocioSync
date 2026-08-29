@@ -29,6 +29,10 @@ A full-stack MERN application designed to streamline community service managemen
 
 ---
 
+## System Workflow
+
+For a detailed explanation of the application's workflow, user roles, complaint lifecycle, and dashboard functionality, see the [System Workflow Documentation](WORKFLOW.md).
+
 ## Live Demo
 
 Frontend: https://sociosync-99.netlify.app
